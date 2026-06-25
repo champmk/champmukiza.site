@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>CHAMP.MK — Champ-Pacifique Mukiza</title>
+<meta name="description" content="Champ-Pacifique Mukiza. Engineer, contributing to progress one commit at a time. Amazon Leo, ModForge, and more.">
+<meta property="og:title" content="CHAMP.MK — Champ-Pacifique Mukiza">
+<meta property="og:description" content="Engineer. Contributing to progress one commit at a time.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://champmukiza.site">
+<link rel="canonical" href="https://champmukiza.site">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<noscript><style>#intro{display:none}</style></noscript>
+</head>
+<body>
+
+<!-- ============================================================
+     INTRO  —  "four commits". Panels sweep left → bottom → right,
+     then the black layer splits into bars and retracts to reveal
+     the home page. Driven by intro.js; skippable; reduced-motion aware.
+     ============================================================ -->
+<div id="intro" aria-hidden="true">
+  <span class="p p-orange"></span>
+  <div class="bars">
+    <span style="--i:0"></span>
+    <span style="--i:1"></span>
+    <span style="--i:2"></span>
+    <span style="--i:3"></span>
+    <span style="--i:4"></span>
+    <span style="--i:5"></span>
+  </div>
+  <p class="hud">
+    <span class="hud-dot"></span>
+    <span class="hud-count">01/03</span>
+    <span class="hud-text">init</span>
+  </p>
+</div>
+
+<a class="skip" href="#about">Skip to content</a>
+
+<main>
+
+  <!-- ===== HOME / HERO ===== -->
+  <section id="home" class="hero">
+    <h1 class="wordmark"><span class="w-champ">CHAMP</span><span class="dotmk">.MK</span></h1>
+    <p class="role">Engineer</p>
+    <p class="tag">Contributing to progress one commit at a time.</p>
+    <a class="scroll-cue" href="#about" aria-label="Scroll to content">
+      <span>scroll</span>
+    </a>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="about" tabindex="-1">
+    <p class="lede">
+      Hi, my name is Champ-Pacifique Mukiza. I&rsquo;m here to, hopefully, help
+      humanity make some of the major strides that will revolutionize the world
+      and the way we live in it. Building is just one way I choose to do that,
+      and honestly, I just love to build.
+    </p>
+    <p class="contact">
+      <a href="mailto:champpacifiquemukiza@gmail.com">Email</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://github.com/champmk">GitHub</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://www.linkedin.com/in/champmukiza">LinkedIn</a>
+    </p>
+  </section>
+
+  <!-- ===== SELECTED WORK ===== -->
+  <section id="work" aria-labelledby="work-h">
+    <h2 id="work-h" class="label">Selected work</h2>
+
+    <article class="entry">
+      <h3>Amazon Leo</h3>
+      <p class="meta">SDE intern &middot; Bellevue, WA &middot; 2026 &ndash; present</p>
+      <p>
+        I&rsquo;m building software for my team here, developing tools that
+        contribute directly to our goal of bringing internet access to every
+        corner of Earth. Leo is Amazon&rsquo;s low-Earth-orbit satellite broadband
+        constellation.
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>ModForge</h3>
+      <p class="meta">Solo project &middot; 2026 &middot; live on npm</p>
+      <p>
+        ModForge is a deterministic engine for migrating Minecraft mods between
+        game versions. I got tired of tools that guess, so I built one that
+        doesn&rsquo;t: it reads every class straight from the jar and checks each
+        mapping against the real target, then tells you exactly how sure it is,
+        grading each result EXACT, CANDIDATE, or UNRESOLVED. It&rsquo;s published on npm and
+        ships an MCP server, so AI agents can ask for verified mappings instead
+        of making them up.
+      </p>
+      <p class="links">
+        <a href="https://github.com/champmk/modforge">Repository</a>
+        <span class="dot" aria-hidden="true">&middot;</span>
+        <a href="https://www.npmjs.com/package/modforge">npm</a>
+        <span class="dot" aria-hidden="true">&middot;</span>
+        <a href="https://github.com/champmk/modforge-deltas">Deltas</a>
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>Converge</h3>
+      <p class="meta">1st place, SwanHacks &middot; 2026</p>
+      <p>
+        Converge is a lecture platform for students that classrooms leave behind.
+        It captions lectures live in under 300&nbsp;milliseconds, reads ASL
+        fingerspelling straight from the webcam, and turns everything that&rsquo;s
+        said into notes, flashcards, and quizzes. We took first place at SwanHacks.
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>Principal Financial Group</h3>
+      <p class="meta">Contract AI engineer &middot; 2024</p>
+      <p>
+        I built a multi-agent RAG pipeline that automated a slow, manual
+        legal-documentation process, running on AWS Lambda, Llama&nbsp;3, and
+        Flask. The first working version cost twelve dollars of cloud to run. I
+        was seventeen.
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>ANNIE &middot; Fermilab</h3>
+      <p class="meta">Software &amp; technical intern, Iowa State &middot; 2024</p>
+      <p>
+        I worked on ANNIE, a neutrino detection experiment at Fermilab, writing
+        simulations and building experiments. When documentation for a broken
+        coincidence machine could not be found, I built a custom one.
+      </p>
+    </article>
+
+    <article class="entry">
+      <h3>NASA App Development Challenge</h3>
+      <p class="meta">National winner &middot; 2024</p>
+      <p>
+        My team won the NASA App Development Challenge with a lunar-mission
+        simulation we built in Unity, and presented it at NASA&rsquo;s Johnson
+        Space Center. We received the inaugural Pay It Forward Award, and the work
+        was covered by NPR and Scholastic.
+      </p>
+    </article>
+
+  </section>
+
+  <footer>
+    <p class="contact">
+      <a href="mailto:champpacifiquemukiza@gmail.com">Email</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://github.com/champmk">GitHub</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://www.linkedin.com/in/champmukiza">LinkedIn</a>
+    </p>
+    <p class="colophon">CHAMP.MK &middot; Seattle &middot; 2026</p>
+  </footer>
+
+</main>
+
+<script src="intro.js" defer></script>
+</body>
+</html>

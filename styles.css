@@ -1,0 +1,348 @@
+/* CHAMP.MK — personal site
+   Plain HTML + CSS + a little JS for the intro. No build step. */
+
+:root {
+  --bg:      #0a0a0a;
+  --ink:     #f4f2ec;   /* near-white text */
+  --soft:    #cfccc4;   /* body text */
+  --muted:   #8a877e;   /* meta, labels */
+  --line:    #232220;   /* hairlines on dark */
+  --orange:  #ff5a1f;   /* vibrant orange */
+  --white:   #f3f0e8;   /* warm white panel */
+
+  --display: "Space Grotesk", system-ui, sans-serif;
+  --serif:   "Newsreader", Georgia, serif;
+  --mono:    "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* intro timing */
+  --t1: 0.50s;   /* each panel sweep */
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-x: clip; }   /* belt-and-suspenders against any horizontal overflow */
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--soft);
+  font-family: var(--serif);
+  font-size: clamp(1.02rem, 0.96rem + 0.3vw, 1.16rem);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* lock scroll while the intro plays */
+body.intro-active { overflow: hidden; }
+
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: #3a3833;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+a:hover { color: var(--orange); text-decoration-color: var(--orange); }
+
+/* ============================================================
+   INTRO OVERLAY
+   ============================================================ */
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--white);   /* opens on white → orange → black */
+  overflow: hidden;
+  pointer-events: none;
+}
+#intro.done { display: none; }
+
+#intro .p,
+#intro .bars {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Step 1 — orange sweeps in from the LEFT */
+#intro .p-orange {
+  background: var(--orange);
+  transform: translateX(-101%);
+}
+/* Step 2 — black layer (as 6 bars) sweeps in from the RIGHT … */
+#intro .bars {
+  display: flex;
+  transform: translateX(101%);
+}
+#intro .bars span {
+  flex: 1 1 0;
+  background: var(--bg);
+  transform: translateY(0);
+  will-change: transform;
+}
+
+/* HUD — the "deploy log": the personal twist (4 commits) */
+#intro .hud {
+  position: absolute;
+  left: clamp(1.4rem, 5vw, 3rem);
+  bottom: clamp(1.4rem, 5vw, 3rem);
+  margin: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: #111110;          /* dark chip keeps the readout on-palette */
+  padding: 0.5em 0.85em;
+  border-radius: 999px;
+  transition: opacity 0.3s ease;
+}
+#intro .hud-dot {
+  width: 0.55em; height: 0.55em;
+  border-radius: 50%;
+  background: var(--orange);
+  animation: blink 0.7s steps(2, jump-none) infinite;
+}
+#intro .hud-count { opacity: 0.6; }
+#intro .hud.fade { opacity: 0; }
+@keyframes blink { 50% { opacity: 0.2; } }
+
+/* ---- the run: triggered by JS adding .play. Three steps, no pauses. ---- */
+#intro.play .p-orange { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0s forwards; }
+#intro.play .bars     { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0.45s forwards; }
+
+/* Step 3 — bars retract multi-directionally (odd up, even down).
+   Overlaps the hero reveal so the motion is continuous. */
+#intro.play .bars span {
+  animation: barOut 0.55s cubic-bezier(.7,0,.2,1) forwards;
+  animation-delay: calc(1.05s + var(--i) * 0.05s);
+}
+#intro.play .bars span:nth-child(odd)  { --dir: -102%; }
+#intro.play .bars span:nth-child(even) { --dir:  102%; }
+
+@keyframes sweepX { to { transform: translateX(0); } }
+@keyframes barOut { to { transform: translateY(var(--dir)); } }
+
+/* Reveal: drop the overlay's own backdrop so the bars uncover the REAL page
+   (not a black box). Applied while the bars still fully cover, so it's unseen. */
+#intro.reveal { background: transparent; }
+#intro.reveal .p-orange { display: none; }
+
+/* ============================================================
+   HERO / HOME
+   ============================================================ */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem clamp(1.4rem, 6vw, 3rem) 3rem;
+  position: relative;
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2rem, 13vw, 12rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+  margin: 0;
+  max-width: 100%;
+}
+.wordmark .w-champ,
+.wordmark .dotmk { display: inline-block; will-change: transform; }
+.wordmark .dotmk { color: var(--orange); }
+
+.role {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  color: var(--orange);
+  margin: 1.6rem 0 0;
+  padding-left: 0.42em;   /* optical: balance the trailing letterspacing */
+}
+
+.tag {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.2rem);
+  color: var(--soft);
+  margin: 0.7rem auto 0;
+  /* Definite rem lengths via breakpoints — % / vw / min() silently fail to
+     constrain a column flex item in some engines, so the line never wraps. */
+  max-width: 32rem;
+}
+@media (max-width: 600px) { .tag { max-width: 19rem; } }
+@media (max-width: 330px) { .tag { max-width: 15rem; } }
+
+/* Definite-length wordmark sizes on phones, so it fits regardless of how the
+   engine resolves vw. */
+@media (max-width: 480px) { .wordmark { font-size: 3rem; } }
+@media (max-width: 340px) { .wordmark { font-size: 2.5rem; } }
+
+/* Hero reveal — each element flies in from its own direction, timed to
+   overlap the bar split so the whole thing reads as one motion. */
+.intro-active .w-champ,
+.intro-active .dotmk,
+.intro-active .role,
+.intro-active .tag,
+.intro-active .scroll-cue { opacity: 0; }
+
+body.revealed .w-champ    { animation: dropTop 1.0s cubic-bezier(.2,.75,.2,1) 0s both; }    /* CHAMP from the top */
+body.revealed .dotmk      { animation: inRight 1.0s cubic-bezier(.2,.75,.2,1) 0.15s both; } /* .MK from the right */
+body.revealed .role       { animation: riseUp 0.7s ease 0.62s both; }
+body.revealed .tag        { animation: riseUp 0.7s ease 0.78s both; }
+body.revealed .scroll-cue { animation: fadeUp 0.75s ease 0.98s both; }
+body.revealed .scroll-cue::after { animation: growLine 0.65s cubic-bezier(.4,0,.2,1) 1.1s both; }
+
+@keyframes dropTop { from { opacity: 0; transform: translateY(-120%); } to { opacity: 1; transform: translateY(0); } }
+@keyframes inRight { from { opacity: 0; transform: translateX(120%); }  to { opacity: 1; transform: translateX(0); } }
+@keyframes riseUp  { from { opacity: 0; transform: translateY(16px); }   to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(8px); }    to { opacity: 0.7; transform: translateY(0); } }
+@keyframes growLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.scroll-cue {
+  position: absolute;
+  bottom: clamp(1.4rem, 4vw, 2.4rem);
+  left: 0;
+  right: 0;
+  width: max-content;
+  margin-inline: auto;          /* center without using transform */
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;          /* offset trailing letter-spacing so it's optically centered */
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  color: var(--muted);
+}
+.scroll-cue::after {
+  content: "";
+  display: block;
+  width: 1px; height: 2.2rem;
+  margin: 0.7rem auto 0;
+  background: linear-gradient(var(--orange), transparent);
+  transform-origin: top;
+}
+.scroll-cue:hover { color: var(--orange); }
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+main > section:not(.hero),
+footer {
+  max-width: 41rem;
+  margin: 0 auto;
+  padding-left: clamp(1.4rem, 6vw, 2.5rem);
+  padding-right: clamp(1.4rem, 6vw, 2.5rem);
+}
+
+.about { padding-top: clamp(3rem, 9vw, 6rem); }
+.lede {
+  font-size: 1.15em;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+  max-width: 34rem;
+}
+
+.contact {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+}
+.dot { color: #3a3833; margin: 0 0.5em; }
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+
+#work {
+  margin-top: 3.4rem;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.entry { margin: 0 0 2.7rem; }
+.entry:last-child { margin-bottom: 0; }
+
+.entry h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.45rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.entry .meta {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+.entry p { margin: 0 0 0.7rem; }
+.entry .links { margin-bottom: 0; }
+.links { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+
+footer {
+  margin-top: 4.5rem;
+  padding-top: 2.2rem;
+  padding-bottom: 4.5rem;
+  border-top: 1px solid var(--line);
+}
+footer .contact { margin-bottom: 0.8rem; }
+.colophon {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ---- Skip link ---- */
+.skip {
+  position: absolute;
+  left: -999px; top: 0;
+  z-index: 10000;
+  background: var(--orange); color: #0a0a0a;
+  padding: 0.5rem 0.9rem; text-decoration: none;
+}
+.skip:focus { left: 0; }
+
+::selection { background: var(--orange); color: #0a0a0a; }
+
+/* ============================================================
+   Reduced motion — no intro, no reveal animation
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  #intro { display: none; }
+  .intro-active .w-champ,
+  .intro-active .dotmk,
+  .intro-active .role,
+  .intro-active .tag,
+  .intro-active .scroll-cue { opacity: 1; }
+  body.revealed .w-champ,
+  body.revealed .dotmk,
+  body.revealed .role,
+  body.revealed .tag,
+  body.revealed .scroll-cue { animation: none; opacity: 1; }
+  body.revealed .scroll-cue::after { animation: none; transform: scaleY(1); }
+  .scroll-cue { opacity: 0.7; }
+}
