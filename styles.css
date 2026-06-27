@@ -7,7 +7,7 @@
   --soft:    #cfccc4;   /* body text */
   --muted:   #8a877e;   /* meta, labels */
   --line:    #232220;   /* hairlines on dark */
-  --orange:  #ff5a1f;   /* vibrant orange */
+  --accent:  #16e16a;   /* vibrant green (accent) */
   --white:   #f3f0e8;   /* warm white panel */
 
   --display: "Space Grotesk", system-ui, sans-serif;
@@ -16,6 +16,25 @@
 
   /* intro timing */
   --t1: 0.50s;   /* each panel sweep */
+
+  color-scheme: dark;
+}
+
+/* Light theme — the lamp turns it on */
+:root[data-theme="light"] {
+  --bg:    #f4f1ea;
+  --ink:   #1b1a17;
+  --soft:  #35332c;
+  --muted: #76736a;
+  --line:  #e3dfd4;
+  color-scheme: light;
+}
+
+/* Smooth the theme change (color only — never transforms, so the intro is untouched) */
+body,
+main, main *,
+footer, footer * {
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, fill 0.3s ease;
 }
 
 * { box-sizing: border-box; }
@@ -44,7 +63,7 @@ a {
   text-decoration-thickness: 1px;
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
-a:hover { color: var(--orange); text-decoration-color: var(--orange); }
+a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 /* ============================================================
    INTRO OVERLAY
@@ -68,7 +87,7 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 
 /* Step 1 — orange sweeps in from the LEFT */
 #intro .p-orange {
-  background: var(--orange);
+  background: var(--accent);
   transform: translateX(-101%);
 }
 /* Step 2 — black layer (as 6 bars) sweeps in from the RIGHT … */
@@ -105,7 +124,7 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 #intro .hud-dot {
   width: 0.55em; height: 0.55em;
   border-radius: 50%;
-  background: var(--orange);
+  background: var(--accent);
   animation: blink 0.7s steps(2, jump-none) infinite;
 }
 #intro .hud-count { opacity: 0.6; }
@@ -150,7 +169,7 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 .wordmark {
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(2rem, 13vw, 12rem);
+  font-size: var(--wm);
   line-height: 0.9;
   letter-spacing: -0.045em;
   color: var(--ink);
@@ -159,14 +178,67 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 }
 .wordmark .w-champ,
 .wordmark .dotmk { display: inline-block; will-change: transform; }
-.wordmark .dotmk { color: var(--orange); }
+.wordmark .dotmk { color: var(--accent); }
+
+/* ---- Lamp (theme toggle), seated on top of CHAMP ---- */
+/* --wm == the wordmark font-size, shared by the wordmark and the lamp so the
+   lamp scales AND seats in font-relative units. That glues it to the cap-tops
+   on every device, regardless of which font metrics are in play. */
+.wordmark-wrap { --wm: clamp(2rem, 13vw, 12rem); position: relative; display: inline-block; }
+
+.lamp {
+  font-size: var(--wm);         /* 1em now == the wordmark's font-size */
+  --seat: 0.14em;               /* font-relative: base rests on the cap-top line */
+  position: absolute;
+  left: 9%;
+  bottom: 100%;
+  width: 1.08em;
+  margin: 0; padding: 0; border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 0;
+  transform: translateY(var(--seat));
+  z-index: 4;
+  -webkit-tap-highlight-color: transparent;
+}
+.lamp svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lamp:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 8px; }
+
+.l-arm    { fill: none; stroke: currentColor; stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; }
+.l-spring { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+.l-solid  { fill: currentColor; }
+.l-shade  { fill: currentColor; }
+.l-mouth  { fill: #2b2823; }                                               /* shadowed interior seen up into the unlit shade */
+.l-base   { fill: currentColor; }                                          /* screw base mounting the bulb into the shade */
+.l-joint  { fill: currentColor; }
+.l-bolt   { fill: var(--bg); }
+.l-bulb   { fill: #9a948c; transition: fill 0.3s ease, filter 0.3s ease; } /* dim, desaturated glass when OFF (dark) */
+.l-spec   { fill: currentColor; opacity: 0.3; }                             /* glassy specular highlight */
+.l-glow   { fill: #ffcf5a; opacity: 0; transition: opacity 0.35s ease; }
+
+:root[data-theme="light"] .l-mouth { fill: #ffe49b; }                      /* warm-lit cavity when ON */
+:root[data-theme="light"] .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255,196,70,0.9)); }
+:root[data-theme="light"] .l-spec { fill: #fff8e6; opacity: 0.75; }        /* hot spot when lit */
+:root[data-theme="light"] .l-glow { opacity: 0.95; }
+
+/* flicker on click — the light stutters before settling into the new state */
+.lamp.flicker .l-glow { animation: lampFlick 0.6s linear; }
+.lamp.flicker .l-bulb { animation: bulbFlick 0.6s linear; }
+@keyframes lampFlick {
+  0%{opacity:1} 8%{opacity:.12} 17%{opacity:.9} 27%{opacity:.08}
+  39%{opacity:1} 52%{opacity:.3} 66%{opacity:1} 80%{opacity:.5} 100%{opacity:1}
+}
+@keyframes bulbFlick {
+  0%,39%,66%,100%{filter:brightness(1)} 8%,27%{filter:brightness(2.1)} 17%,52%{filter:brightness(.55)}
+}
 
 .role {
   font-family: var(--mono);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.42em;
-  color: var(--orange);
+  color: var(--accent);
   margin: 1.6rem 0 0;
   padding-left: 0.42em;   /* optical: balance the trailing letterspacing */
 }
@@ -185,8 +257,8 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 
 /* Definite-length wordmark sizes on phones, so it fits regardless of how the
    engine resolves vw. */
-@media (max-width: 480px) { .wordmark { font-size: 3rem; } }
-@media (max-width: 340px) { .wordmark { font-size: 2.5rem; } }
+@media (max-width: 480px) { .wordmark-wrap { --wm: 3rem; } }
+@media (max-width: 340px) { .wordmark-wrap { --wm: 2.5rem; } }
 
 /* Hero reveal — each element flies in from its own direction, timed to
    overlap the bar split so the whole thing reads as one motion. */
@@ -195,6 +267,14 @@ a:hover { color: var(--orange); text-decoration-color: var(--orange); }
 .intro-active .role,
 .intro-active .tag,
 .intro-active .scroll-cue { opacity: 0; }
+
+/* The lamp stays painted (it sits behind the intro overlay); it only drops in
+   via transform, never fading from 0 — so an early frame can never be blank. */
+body.revealed .lamp { animation: lampDrop 0.6s cubic-bezier(.2,.8,.2,1) 0.55s both; }
+@keyframes lampDrop {
+  from { transform: translateY(calc(var(--seat) - 0.55em)); }
+  to   { transform: translateY(var(--seat)); }
+}
 
 body.revealed .w-champ    { animation: dropTop 1.0s cubic-bezier(.2,.75,.2,1) 0s both; }    /* CHAMP from the top */
 body.revealed .dotmk      { animation: inRight 1.0s cubic-bezier(.2,.75,.2,1) 0.15s both; } /* .MK from the right */
@@ -230,10 +310,10 @@ body.revealed .scroll-cue::after { animation: growLine 0.65s cubic-bezier(.4,0,.
   display: block;
   width: 1px; height: 2.2rem;
   margin: 0.7rem auto 0;
-  background: linear-gradient(var(--orange), transparent);
+  background: linear-gradient(var(--accent), transparent);
   transform-origin: top;
 }
-.scroll-cue:hover { color: var(--orange); }
+.scroll-cue:hover { color: var(--accent); }
 
 /* ============================================================
    CONTENT
@@ -321,12 +401,12 @@ footer .contact { margin-bottom: 0.8rem; }
   position: absolute;
   left: -999px; top: 0;
   z-index: 10000;
-  background: var(--orange); color: #0a0a0a;
+  background: var(--accent); color: #0a0a0a;
   padding: 0.5rem 0.9rem; text-decoration: none;
 }
 .skip:focus { left: 0; }
 
-::selection { background: var(--orange); color: #0a0a0a; }
+::selection { background: var(--accent); color: #0a0a0a; }
 
 /* ============================================================
    Reduced motion — no intro, no reveal animation
@@ -337,12 +417,14 @@ footer .contact { margin-bottom: 0.8rem; }
   .intro-active .dotmk,
   .intro-active .role,
   .intro-active .tag,
-  .intro-active .scroll-cue { opacity: 1; }
+  .intro-active .scroll-cue,
+  .intro-active .lamp { opacity: 1; }
   body.revealed .w-champ,
   body.revealed .dotmk,
   body.revealed .role,
   body.revealed .tag,
   body.revealed .scroll-cue { animation: none; opacity: 1; }
+  body.revealed .lamp { animation: none; opacity: 1; transform: translateY(var(--seat)); }
   body.revealed .scroll-cue::after { animation: none; transform: scaleY(1); }
   .scroll-cue { opacity: 0.7; }
 }

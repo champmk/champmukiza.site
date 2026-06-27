@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
+<script>try{var u=new URLSearchParams(location.search).get('theme');var t=u||localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <title>CHAMP.MK — Champ-Pacifique Mukiza</title>
 <meta name="description" content="Champ-Pacifique Mukiza. Engineer, contributing to progress one commit at a time. Amazon Leo, ModForge, and more.">
 <meta property="og:title" content="CHAMP.MK — Champ-Pacifique Mukiza">
@@ -15,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=3">
 <noscript><style>#intro{display:none}</style></noscript>
 </head>
 <body>
@@ -48,7 +49,50 @@
 
   <!-- ===== HOME / HERO ===== -->
   <section id="home" class="hero">
-    <h1 class="wordmark"><span class="w-champ">CHAMP</span><span class="dotmk">.MK</span></h1>
+    <div class="wordmark-wrap">
+      <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Click the lamp">
+        <svg viewBox="0 0 150 160" aria-hidden="true" focusable="false">
+          <defs>
+            <filter id="lglow" x="-160%" y="-160%" width="420%" height="420%">
+              <feGaussianBlur stdDeviation="6"/>
+            </filter>
+          </defs>
+          <!-- weighted base: flat bottom resting on the letters -->
+          <path class="l-solid" d="M41 158 Q38.5 158 39.5 155.6 L45 150.4 Q46.2 149 49 149 L71 149 Q73.8 149 75 150.4 L80.5 155.6 Q81.5 158 79 158 Z"/>
+          <!-- base column / hub -->
+          <rect class="l-solid" x="52" y="143.5" width="16" height="6.5" rx="2.4"/>
+          <!-- base pivot -->
+          <circle class="l-joint" cx="60" cy="143" r="5.6"/>
+          <circle class="l-bolt"  cx="60" cy="143" r="1.9"/>
+          <!-- lower arm + parallel tension rod -->
+          <path class="l-arm"    d="M60 143 L80 96"/>
+          <path class="l-spring" d="M64 142 L84 95"/>
+          <!-- elbow -->
+          <circle class="l-joint" cx="80" cy="96" r="5.4"/>
+          <circle class="l-bolt"  cx="80" cy="96" r="1.8"/>
+          <!-- upper arm + parallel tension rod -->
+          <path class="l-arm"    d="M80 96 L104 72"/>
+          <path class="l-spring" d="M82.5 99 L106.5 75"/>
+          <!-- head pivot -->
+          <circle class="l-joint" cx="104" cy="72" r="5.2"/>
+          <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
+          <!-- conical bell shade, opening straight DOWN onto the letters -->
+          <path class="l-shade" d="M97 71 Q104 68 111 72 L118 99 Q104 104 90 99 Z"/>
+          <!-- finial cap on top of the shade -->
+          <circle class="l-solid" cx="104" cy="68.5" r="2"/>
+          <!-- dark interior of the shade opening (so the bulb reads as seated INSIDE) -->
+          <ellipse class="l-mouth" cx="104" cy="99.5" rx="13" ry="4"/>
+          <!-- warm halo, centred on the bulb (light only) -->
+          <circle class="l-glow" cx="104" cy="105" r="13" filter="url(#lglow)"/>
+          <!-- screw base: mounts the bulb up into the shade socket -->
+          <path class="l-base" d="M100.8 97.8 h6.4 l-0.8 3.4 h-4.8 z"/>
+          <!-- glass bulb (pear shape), seated in the shade opening -->
+          <path class="l-bulb" d="M102 101 q-3 2.2 -3 5 a5.4 5.4 0 1 0 10.8 0 q0 -2.8 -3 -5 z"/>
+          <circle class="l-spec" cx="101.9" cy="103.8" r="1.6"/>
+        </svg>
+      </button>
+      <h1 class="wordmark"><span class="w-champ">CHAMP</span><span class="dotmk">.MK</span></h1>
+    </div>
     <p class="role">Engineer</p>
     <p class="tag">Contributing to progress one commit at a time.</p>
     <a class="scroll-cue" href="#about" aria-label="Scroll to content">
@@ -168,5 +212,6 @@
 </main>
 
 <script src="intro.js" defer></script>
+<script src="lamp.js" defer></script>
 </body>
 </html>
