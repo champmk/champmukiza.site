@@ -102,35 +102,6 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   will-change: transform;
 }
 
-/* HUD — the "deploy log": the personal twist (4 commits) */
-#intro .hud {
-  position: absolute;
-  left: clamp(1.4rem, 5vw, 3rem);
-  bottom: clamp(1.4rem, 5vw, 3rem);
-  margin: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  background: #111110;          /* dark chip keeps the readout on-palette */
-  padding: 0.5em 0.85em;
-  border-radius: 999px;
-  transition: opacity 0.3s ease;
-}
-#intro .hud-dot {
-  width: 0.55em; height: 0.55em;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: blink 0.7s steps(2, jump-none) infinite;
-}
-#intro .hud-count { opacity: 0.6; }
-#intro .hud.fade { opacity: 0; }
-@keyframes blink { 50% { opacity: 0.2; } }
-
 /* ---- the run: triggered by JS adding .play. Three steps, no pauses. ---- */
 #intro.play .p-orange { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0s forwards; }
 #intro.play .bars     { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0.45s forwards; }
@@ -188,7 +159,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 .lamp {
   font-size: var(--wm);         /* 1em now == the wordmark's font-size */
-  --seat: 0.14em;               /* font-relative: base rests on the cap-top line */
+  --seat: 0.10em;               /* font-relative: base rests on the cap-top line */
   position: absolute;
   left: 9%;
   bottom: 100%;
