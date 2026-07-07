@@ -18,6 +18,20 @@
   /* the one easing every motion on this site uses */
   --champ-ease: cubic-bezier(0.22, 0.72, 0.14, 1);
 
+  /* window materials — night: dark wood in an unlit room */
+  --trim-hi:  #443e33;
+  --trim-mid: #2e2a23;
+  --trim-lo:  #181612;
+  --rev-in:   #15130f;   /* reveal near the room */
+  --rev-out:  #0b0d13;   /* reveal near the night */
+  --sill-a:   #2a251d;
+  --sill-b:   #15120e;
+
+  /* the sky itself (shared by the overlay and the glass preview) */
+  --skybg:
+    radial-gradient(120% 34% at 50% 104%, rgba(255, 176, 96, 0.10), transparent 62%),
+    radial-gradient(130% 100% at 50% 118%, #141924 0%, #090b10 55%, #04050a 100%);
+
   color-scheme: dark;
 }
 
@@ -30,6 +44,20 @@
   --muted: #76736a;
   --line:  #e3dfd4;
   --faint: #cfc9bc;
+
+  /* window materials — day: painted casement in full light */
+  --trim-hi:  #f5efe0;
+  --trim-mid: #ded5c2;
+  --trim-lo:  #b1a892;
+  --rev-in:   #c9c1ad;
+  --rev-out:  #ede6d5;
+  --sill-a:   #e7e0ce;
+  --sill-b:   #b6ae99;
+
+  --skybg:
+    radial-gradient(70% 48% at 76% 10%, rgba(255, 244, 212, 0.55), transparent 65%),
+    linear-gradient(#7fa0b4 0%, #a9bfc7 42%, #d9d3bd 82%, #efe9d8 100%);
+
   color-scheme: light;
 }
 
@@ -451,36 +479,216 @@ footer {
 .links { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
 
 /* ============================================================
-   THE WINDOW — the room has an outside.
+   THE WINDOW — a real casement pair set into a wall with
+   thickness. Everything lives in one 3D scene: reveal planes,
+   outward-swinging sashes, a sill, and the sky beyond the glass.
    ============================================================ */
 .window-sect {
+  --ww: min(41rem, 92vw);           /* the text column's width */
+  --wh: calc(var(--ww) * 0.68);
+  --wd: clamp(2.6rem, 7vw, 4.4rem); /* wall thickness */
+  --case: clamp(0.7rem, 2.4vw, 1.1rem);
+  perspective: 1200px;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
-  margin-top: 5rem;
+  gap: 1.7rem;
+  margin-top: 5.5rem;
 }
+body.sky-opening .window-sect { z-index: 9400; }
+
 .window {
-  width: 112px;
+  position: relative;
+  width: var(--ww);
+  height: calc(var(--wh) + 2.6rem);
   margin: 0; padding: 0; border: 0;
   background: none;
-  color: var(--ink);
   cursor: pointer;
+  color: var(--ink);
   -webkit-tap-highlight-color: transparent;
+}
+.window:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
+
+.win-stage {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform 1.15s cubic-bezier(0.5, 0.04, 0.16, 1);
+}
+
+/* the opening itself (inside the casing) */
+.win-frame {
+  position: absolute;
+  left: var(--case);
+  top: var(--case);
+  width: calc(100% - 2 * var(--case));
+  height: calc(var(--wh) - 2 * var(--case));
+  display: block;
+  transform-style: preserve-3d;
+}
+
+/* ---- the outside, beyond the outer wall face; bleeds well past
+   the opening so the view holds while flying through ---- */
+.win-view {
+  position: absolute;
+  inset: -42%;
+  display: block;
+  transform: translateZ(calc(-1 * var(--wd) - 26px));
+  overflow: hidden;
+}
+.wv-sky { position: absolute; inset: 0; display: block; background: var(--skybg); }
+.wv-haze { position: absolute; inset: 0; display: block; background: radial-gradient(90% 55% at 78% 8%, rgba(255, 246, 218, 0.30), transparent 62%); }
+.wv-sun {
+  position: absolute; top: 8%; right: 15%;
+  width: 30%; aspect-ratio: 1; display: block; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 252, 240, 0.95) 0 9%, rgba(255, 242, 206, 0.5) 24%, rgba(255, 238, 200, 0.16) 48%, transparent 70%);
+}
+.wv-cloud { position: absolute; left: 10%; top: 36%; width: 24%; height: auto; animation: wvdrift 36s ease-in-out infinite alternate; }
+.wv-cloud path { fill: url(#cg); stroke: rgba(74, 84, 90, 0.35); stroke-width: 1.2; }
+@keyframes wvdrift { from { transform: translateX(-8%); } to { transform: translateX(64%); } }
+.wv-stars { position: absolute; top: 0; left: 0; width: 2px; height: 2px; border-radius: 50%; display: block; }
+.wv-b { animation: twink 3.2s ease-in-out infinite alternate; }
+.wv-moon { position: absolute; top: 26%; right: 31%; width: 9%; height: auto; filter: drop-shadow(0 0 14px rgba(240, 233, 208, 0.35)); }
+.wv-moon path { fill: #efe9d6; }
+:root[data-theme="light"] .wv-stars,
+:root[data-theme="light"] .wv-moon { display: none; }
+:root:not([data-theme="light"]) .wv-sun,
+:root:not([data-theme="light"]) .wv-haze,
+:root:not([data-theme="light"]) .wv-cloud { display: none; }
+
+/* ---- the wall the window is set into: a page-colored ring that
+   occludes the view's bleed (box-shadow: paints, never scrolls) ---- */
+.win-wall {
+  position: absolute;
+  inset: 0;
+  display: block;
+  box-shadow: 0 0 0 78vmax var(--bg);
+  transition: box-shadow 0.35s var(--champ-ease);
+}
+
+/* ---- the reveal: four planes of wall thickness ---- */
+.wt { position: absolute; display: block; }
+.wt-l { left: 0; top: 0; width: var(--wd); height: 100%; transform-origin: left center; transform: rotateY(90deg);
+        background: linear-gradient(to right, var(--rev-in), var(--rev-out)); }
+.wt-r { right: 0; top: 0; width: var(--wd); height: 100%; transform-origin: right center; transform: rotateY(-90deg);
+        background: linear-gradient(to left, var(--rev-in), var(--rev-out)); }
+.wt-t { left: 0; top: 0; width: 100%; height: var(--wd); transform-origin: center top; transform: rotateX(-90deg);
+        background: linear-gradient(to bottom, var(--rev-in), var(--rev-out)); }
+.wt-b { left: 0; bottom: 0; width: 100%; height: var(--wd); transform-origin: center bottom; transform: rotateX(90deg);
+        background: linear-gradient(to top, var(--rev-in), var(--rev-out)); }
+
+/* ---- the sashes: hinged at the jambs, meeting in the middle,
+   mounted at the outer face of the wall, opening OUTWARD ---- */
+.sash {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: block;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(-1 * var(--wd))) rotateY(0deg);
+  transition: transform 1s cubic-bezier(0.34, 0.85, 0.3, 1.06);
+  border: clamp(7px, 1.6vw, 12px) solid var(--trim-mid);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px var(--trim-lo);
+  background: transparent;
+}
+.sash-l { left: 0;  transform-origin: left center;  border-right-width: clamp(4px, 1vw, 7px); }
+.sash-r { right: 0; transform-origin: right center; border-left-width:  clamp(4px, 1vw, 7px); }
+.window.opening .sash-l { transform: translateZ(calc(-1 * var(--wd))) rotateY(107deg);  transition-delay: 0.18s; }
+.window.opening .sash-r { transform: translateZ(calc(-1 * var(--wd))) rotateY(-107deg); transition-delay: 0.18s; }
+@media (hover: hover) {
+  .window:hover:not(.opening) .sash-l { transform: translateZ(calc(-1 * var(--wd))) rotateY(6deg); }
+  .window:hover:not(.opening) .sash-r { transform: translateZ(calc(-1 * var(--wd))) rotateY(-6deg); }
+}
+
+.sash-glass {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: linear-gradient(112deg,
+    rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.02) 34%,
+    rgba(255, 255, 255, 0.16) 52%, rgba(255, 255, 255, 0.03) 66%,
+    rgba(255, 255, 255, 0.08) 92%);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.16);
+}
+
+.muntin { position: absolute; display: block; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+.m-v  { left: 50%; top: 0; bottom: 0; width: 6px; transform: translateX(-50%);
+        background: linear-gradient(90deg, var(--trim-hi), var(--trim-mid) 55%, var(--trim-lo)); }
+.m-h1 { top: 33.33%; }
+.m-h2 { top: 66.66%; }
+.m-h1, .m-h2 { left: 0; right: 0; height: 6px; transform: translateY(-50%);
+        background: linear-gradient(var(--trim-hi), var(--trim-mid) 55%, var(--trim-lo)); }
+
+/* espagnolette handles, meeting at the center stiles */
+.handle {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 54px;
+  display: block;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #efeade, #b7b1a2 45%, #6f6a5d);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transform: translateY(-9px);          /* pivot near the top of the grip */
+  transform-origin: 4.5px 9px;
   transition: transform 0.3s var(--champ-ease);
 }
-.window:hover { transform: translateY(-2px); }
-.window:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 6px; }
-.window svg { display: block; width: 100%; height: auto; }
-.w-frame { fill: none; stroke: currentColor; stroke-width: 6; }
-.w-bars  { fill: none; stroke: currentColor; stroke-width: 4; }
-.w-sill  { fill: currentColor; }
-.w-glass { fill: #0b0e15; transition: fill 0.35s var(--champ-ease); }
-.w-mini-night circle { fill: #e9e5da; opacity: 0.85; }
-.w-mini-day path { fill: rgba(252, 251, 246, 0.95); }
-:root[data-theme="light"] .w-glass { fill: url(#wsky); }
-:root[data-theme="light"] .w-mini-night { display: none; }
-:root:not([data-theme="light"]) .w-mini-day { display: none; }
+.sash-l .handle { right: 9px; }
+.sash-r .handle { left: 9px; }
+.handle::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 1px;
+  width: 17px; height: 27px;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: linear-gradient(var(--trim-hi), var(--trim-lo));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+.window.opening .sash-l .handle { transform: translateY(-9px) rotate(46deg); }
+.window.opening .sash-r .handle { transform: translateY(-9px) rotate(-46deg); }
+
+/* painted casing around the opening */
+.wc { position: absolute; display: block; }
+.wc-t { left: calc(-1 * var(--case)); right: calc(-1 * var(--case)); top: calc(-1 * var(--case)); height: var(--case);
+        background: linear-gradient(var(--trim-hi), var(--trim-mid)); border-radius: 3px 3px 0 0; }
+.wc-b { left: calc(-1 * var(--case)); right: calc(-1 * var(--case)); bottom: calc(-1 * var(--case)); height: var(--case);
+        background: linear-gradient(var(--trim-mid), var(--trim-lo)); }
+.wc-l { left: calc(-1 * var(--case)); top: 0; bottom: 0; width: var(--case);
+        background: linear-gradient(90deg, var(--trim-hi), var(--trim-mid)); }
+.wc-r { right: calc(-1 * var(--case)); top: 0; bottom: 0; width: var(--case);
+        background: linear-gradient(270deg, var(--trim-hi), var(--trim-mid)); }
+
+/* interior sill: a real slab, tipped toward the room */
+.win-sill {
+  position: absolute;
+  left: -0.4rem;
+  right: -0.4rem;
+  top: var(--wh);
+  height: 2.5rem;
+  display: block;
+  transform-origin: center top;
+  transform: rotateX(84deg);
+  background: linear-gradient(var(--sill-a), var(--sill-b));
+  border-radius: 0 0 4px 4px;
+}
+.win-shadow {
+  position: absolute;
+  left: 6%; right: 6%;
+  top: calc(var(--wh) + 1.5rem);
+  height: 22px;
+  display: block;
+  background: radial-gradient(55% 100% at 50% 0, rgba(0, 0, 0, 0.30), transparent 70%);
+  filter: blur(5px);
+  opacity: 0.8;
+}
+:root[data-theme="light"] .win-shadow { opacity: 0.45; }
+
 .win-hint {
   font-family: var(--mono);
   font-size: 0.66rem;
@@ -497,28 +705,79 @@ footer {
    ============================================================ */
 body.sky-open { overflow: hidden; }
 
+/* The overlay no longer animates itself — the 3D dolly through the
+   window does the travelling; the overlay simply crossfades in as
+   the glass-preview sky fills the screen, so the switch is unseen. */
 .sky {
   position: fixed;
   inset: 0;
   z-index: 9500;
   outline: none;
-  background: radial-gradient(130% 100% at 50% 118%, #131720 0%, #08090d 55%, #050507 100%);
-  transition: clip-path 0.85s var(--champ-ease);
+  background: var(--skybg);
+  opacity: 0;
+  transition: opacity 0.55s var(--champ-ease);
 }
+.sky.open { opacity: 1; }
 .sky[hidden] { display: none; }
-:root[data-theme="light"] .sky {
-  background: linear-gradient(#8ea9b9 0%, #b5c4c9 48%, #e3dcc8 88%, #f4f1ea 100%);
-}
 .sky-inner {
   position: absolute;
   inset: 0;
-  transform: scale(1.14);
-  opacity: 0.4;
-  transition: transform 0.85s var(--champ-ease), opacity 0.5s var(--champ-ease);
+  transform: scale(1.05);
+  transition: transform 1.5s var(--champ-ease);
 }
-.sky.open .sky-inner { transform: none; opacity: 1; }
+.sky.open .sky-inner { transform: none; }
 
-/* stars: one box-shadow field + a twinkling subset (night only) */
+/* ---- atmosphere layers ---- */
+.sky-fx { position: absolute; inset: 0; pointer-events: none; }
+:root[data-theme="light"] .sky-night-fx { display: none; }
+:root:not([data-theme="light"]) .sky-day-fx { display: none; }
+
+.sky-haze { position: absolute; inset: 0; background: radial-gradient(85% 60% at 76% 6%, rgba(255, 246, 215, 0.34), transparent 62%); }
+.sky-sun {
+  position: absolute; top: 6%; right: 13%;
+  width: 36vmin; height: 36vmin; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 253, 244, 0.98) 0 7%, rgba(255, 243, 208, 0.55) 20%, rgba(255, 238, 198, 0.18) 46%, transparent 70%);
+}
+.bgcloud { position: absolute; height: auto; }
+.bgcloud path { fill: url(#cg); stroke: rgba(74, 84, 90, 0.28); stroke-width: 1; }
+.bc1 { left: 5%;  top: 58%; width: 30vmin; opacity: 0.8;  animation: cloudslide 80s ease-in-out infinite alternate; }
+.bc2 { left: 38%; top: 71%; width: 19vmin; opacity: 0.5;  animation: cloudslide 110s ease-in-out infinite alternate-reverse; }
+.bc3 { left: 70%; top: 60%; width: 26vmin; opacity: 0.65; animation: cloudslide 95s ease-in-out infinite alternate; }
+.bc4 { left: 22%; top: 7%;  width: 13vmin; opacity: 0.4;  animation: cloudslide 70s ease-in-out infinite alternate-reverse; }
+@keyframes cloudslide { from { transform: translateX(-4vw); } to { transform: translateX(4vw); } }
+
+.milky {
+  position: absolute; inset: -25%;
+  background: linear-gradient(112deg, transparent 42%, rgba(215, 222, 240, 0.05) 50%, rgba(215, 222, 240, 0.02) 54%, transparent 62%);
+}
+.sky-moon { position: absolute; top: 9%; right: 10%; width: 11vmin; height: auto; filter: drop-shadow(0 0 22px rgba(240, 233, 208, 0.30)); }
+.sky-moon path { fill: #efe9d6; }
+
+/* once in a while, a meteor */
+.meteor {
+  position: absolute; top: 13%; left: 70%;
+  width: 2px; height: 2px; border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.55);
+  transform: rotate(205deg);
+  animation: meteor 41s linear infinite 7s;
+}
+.meteor::after {
+  content: "";
+  position: absolute;
+  right: 1px; top: 0;
+  width: 84px; height: 1.5px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.75), transparent);
+}
+@keyframes meteor {
+  0%, 90.5% { opacity: 0; transform: rotate(205deg) translateX(0); }
+  91%       { opacity: 0.9; }
+  95.5%     { opacity: 0; transform: rotate(205deg) translateX(52vmin); }
+  100%      { opacity: 0; }
+}
+
+/* stars: three depths of box-shadow field (night only) */
 .stars {
   position: absolute;
   top: 0; left: 0;
@@ -526,6 +785,7 @@ body.sky-open { overflow: hidden; }
   border-radius: 50%;
   pointer-events: none;
 }
+.stars-far { width: 1px; height: 1px; }
 .stars-tw { animation: twink 3.4s ease-in-out infinite alternate; }
 @keyframes twink { from { opacity: 1; } to { opacity: 0.35; } }
 :root[data-theme="light"] .stars { display: none; }
@@ -552,8 +812,8 @@ body.sky-open { overflow: hidden; }
   gap: 0.55rem;
   text-decoration: none;
 }
-.sky-cloud { width: clamp(64px, 9vw, 96px); height: auto; animation: drift 8s ease-in-out infinite alternate; }
-.sky-cloud path { fill: rgba(252, 251, 246, 0.94); stroke: rgba(58, 70, 76, 0.5); stroke-width: 1.5; }
+.sky-cloud { width: clamp(88px, 12vw, 132px); height: auto; animation: drift 8s ease-in-out infinite alternate; }
+.sky-cloud path { fill: url(#cg); stroke: rgba(70, 80, 86, 0.42); stroke-width: 1.3; }
 .sky-spot:nth-child(2) .sky-cloud { animation-delay: -3s; }
 .sky-spot:nth-child(3) .sky-cloud { animation-delay: -5.5s; }
 .sky-spot:nth-child(4) .sky-cloud { animation-delay: -1.5s; }
@@ -605,9 +865,12 @@ body.sky-open { overflow: hidden; }
 .sky-home:hover { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
-  .sky { transition: none; }
-  .sky-inner { transition: none; transform: none; opacity: 1; }
-  .sky-cloud, .sky-star path, .stars-tw { animation: none; }
+  .sky { transition: opacity 0.2s linear; }
+  .sky-inner { transition: none; transform: none; }
+  .sky-cloud, .sky-star path, .stars-tw, .bgcloud, .meteor, .wv-cloud, .wv-b { animation: none; }
+  .win-stage, .sash, .handle { transition: none; }
+  .window:hover:not(.opening) .sash-l,
+  .window:hover:not(.opening) .sash-r { transform: translateZ(calc(-1 * var(--wd))) rotateY(0deg); }
 }
 
 footer {

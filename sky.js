@@ -1,8 +1,10 @@
-/* Outside.
-   Click the window and you lean through it: the sky overlay's clip-path
-   starts as the exact rectangle of the glass and grows to fill the room.
-   Day outside: five clouds. Night: five bright stars. Esc comes home.
-   The starfield is seeded, not random — it's the same sky every night. */
+/* Outside — through a real window.
+   Click: the handles turn, the sashes swing outward from the middle,
+   and the camera dollies through the opening (a true perspective
+   translateZ, so the reveal walls and open sashes slide past you).
+   As the glass-preview sky fills the screen, the full overlay
+   crossfades in — the seam is invisible because they are the same sky.
+   The starfield is seeded, never random: same sky every night. */
 (function () {
   "use strict";
 
@@ -10,88 +12,120 @@
   var sky = document.getElementById("sky");
   if (!win || !sky) return;
 
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var glass = win.querySelector(".w-glass");
+  var sect = document.querySelector(".window-sect");
+  var stage = win.querySelector(".win-stage");
+  var frame = win.querySelector(".win-frame");
   var home = sky.querySelector(".sky-home");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var PERSPECTIVE = 1200;   // must match .window-sect { perspective }
   var open = false;
-  var closing = null;
+  var busy = false;
 
-  /* ---------- the same sky every night (seeded, never Math.random) ---------- */
-  var base = sky.querySelector(".stars:not(.stars-tw)");
-  var tw = sky.querySelector(".stars-tw");
-  if (base && tw) {
-    var s = 20260706;
-    var rnd = function () {
-      s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
-      return s / 4294967296;
-    };
-    var quiet = [], twinkling = [];
-    for (var i = 0; i < 120; i++) {
-      var star = (rnd() * 100).toFixed(2) + "vw " +
-                 (rnd() * 78).toFixed(2) + "vh 0 " +
-                 (rnd() < 0.16 ? "1px " : "0 ") +
-                 "rgba(244,242,236," + (0.14 + rnd() * 0.5).toFixed(2) + ")";
-      (i % 4 === 0 ? twinkling : quiet).push(star);
+  /* ---------- the same sky every night ---------- */
+  var s = 20260706;
+  function rnd() {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    return s / 4294967296;
+  }
+
+  (function buildStars() {
+    var far = [], mid = [], bright = [], i;
+    for (i = 0; i < 170; i++) {
+      far.push((rnd() * 100).toFixed(2) + "vw " + (rnd() * 80).toFixed(2) + "vh 0 0 rgba(238,240,248," + (0.08 + rnd() * 0.22).toFixed(2) + ")");
     }
-    base.style.boxShadow = quiet.join(",");
-    tw.style.boxShadow = twinkling.join(",");
-  }
+    for (i = 0; i < 85; i++) {
+      mid.push((rnd() * 100).toFixed(2) + "vw " + (rnd() * 78).toFixed(2) + "vh 0 " + (rnd() < 0.2 ? "1px" : "0") + " rgba(244,242,236," + (0.2 + rnd() * 0.38).toFixed(2) + ")");
+    }
+    for (i = 0; i < 26; i++) {
+      bright.push((rnd() * 100).toFixed(2) + "vw " + (rnd() * 72).toFixed(2) + "vh 1px 1px rgba(248,246,238," + (0.5 + rnd() * 0.42).toFixed(2) + ")");
+    }
+    var farEl = sky.querySelector(".stars-far");
+    var midEl = sky.querySelector(".stars:not(.stars-far):not(.stars-tw)");
+    var twEl = sky.querySelector(".stars-tw");
+    if (farEl) farEl.style.boxShadow = far.join(",");
+    if (midEl) midEl.style.boxShadow = mid.join(",");
+    if (twEl) twEl.style.boxShadow = bright.join(",");
 
-  /* ---------- the pane, as a clip rectangle ---------- */
-  function paneClip() {
-    var r = glass.getBoundingClientRect();
-    return "inset(" + Math.max(0, r.top) + "px " +
-      Math.max(0, window.innerWidth - r.right) + "px " +
-      Math.max(0, window.innerHeight - r.bottom) + "px " +
-      Math.max(0, r.left) + "px round 3px)";
-  }
+    /* the little piece of the same sky behind the glass */
+    var wa = [], wb = [];
+    for (i = 0; i < 70; i++) {
+      wa.push((rnd() * 900 - 80).toFixed(0) + "px " + (rnd() * 660 - 80).toFixed(0) + "px 0 0 rgba(244,242,236," + (0.16 + rnd() * 0.42).toFixed(2) + ")");
+    }
+    for (i = 0; i < 24; i++) {
+      wb.push((rnd() * 900 - 80).toFixed(0) + "px " + (rnd() * 620 - 80).toFixed(0) + "px 0 1px rgba(246,244,238," + (0.4 + rnd() * 0.4).toFixed(2) + ")");
+    }
+    var wvA = win.querySelector(".wv-a");
+    var wvB = win.querySelector(".wv-b");
+    if (wvA) wvA.style.boxShadow = wa.join(",");
+    if (wvB) wvB.style.boxShadow = wb.join(",");
+  })();
 
+  /* ---------- through the window ---------- */
   function openSky() {
-    if (open) return;
+    if (open || busy) return;
     open = true;
-    clearTimeout(closing);
-    sky.hidden = false;
-    document.body.classList.add("sky-open");
+    busy = true;
+    document.body.classList.add("sky-open");     // scroll locked from the first frame
+    document.body.classList.add("sky-opening");  // window rises above the page
 
     if (reduce) {
-      sky.style.clipPath = "none";
-      sky.classList.add("open");
-      sky.focus();
+      sky.hidden = false;
+      requestAnimationFrame(function () { sky.classList.add("open"); });
+      finishOpen(260);
       return;
     }
-    sky.style.transition = "none";
-    sky.style.clipPath = paneClip();
-    var settled = false;
-    var toOpen = function () {
-      if (settled || !open) return;
-      settled = true;
-      sky.style.transition = "";
-      sky.classList.add("open");
-      sky.style.clipPath = "inset(0px 0px 0px 0px round 0px)";
-    };
-    requestAnimationFrame(function () {
-      requestAnimationFrame(toOpen);
-    });
-    window.setTimeout(toOpen, 120);   // belt-and-suspenders if a frame is dropped
-    window.setTimeout(function () { sky.focus(); }, 870);
+
+    /* aim the camera axis through the middle of the opening */
+    var o = frame.getBoundingClientRect();
+    var sc = sect.getBoundingClientRect();
+    sect.style.perspectiveOrigin =
+      (o.left - sc.left + o.width / 2) + "px " + (o.top - sc.top + o.height / 2) + "px";
+
+    win.classList.add("opening");   // handles turn, sashes swing (CSS)
+
+    /* dolly: bring the opening plane almost to the camera */
+    var need = (Math.max(window.innerWidth, window.innerHeight) * 2.2) / Math.max(o.width, 120);
+    var tz = Math.min(PERSPECTIVE * (1 - 1 / need), PERSPECTIVE * 0.94);
+    window.setTimeout(function () {
+      stage.style.transform = "translateZ(" + tz + "px)";
+    }, 420);
+
+    /* crossfade to the real sky as the preview fills the screen */
+    window.setTimeout(function () {
+      sky.hidden = false;
+      requestAnimationFrame(function () { sky.classList.add("open"); });
+    }, 1150);
+
+    finishOpen(1800);
+  }
+
+  function finishOpen(ms) {
+    window.setTimeout(function () {
+      sky.focus();
+      /* reset the stage silently behind the opaque sky */
+      win.classList.remove("opening");
+      stage.style.transition = "none";
+      stage.style.transform = "";
+      void stage.offsetWidth;
+      stage.style.transition = "";
+      sect.style.perspectiveOrigin = "";
+      document.body.classList.remove("sky-opening");
+      busy = false;
+    }, ms);
   }
 
   function closeSky() {
-    if (!open) return;
+    if (!open || busy) return;
     open = false;
-
-    function done() {
+    busy = true;
+    sky.classList.remove("open");
+    window.setTimeout(function () {
       sky.hidden = true;
-      sky.classList.remove("open");
-      sky.style.clipPath = "";
       document.body.classList.remove("sky-open");
       win.focus();
-    }
-
-    if (reduce) { done(); return; }
-    sky.classList.remove("open");
-    sky.style.clipPath = paneClip();
-    closing = window.setTimeout(done, 880);
+      busy = false;
+    }, reduce ? 90 : 600);
   }
 
   win.addEventListener("click", openSky);
