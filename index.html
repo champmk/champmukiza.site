@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://champmukiza.site">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="styles.css?v=8">
 <noscript><style>#intro{display:none}</style></noscript>
 </head>
 <body>
@@ -242,62 +242,6 @@
 
   </section>
 
-  <!-- ============================================================
-       THE WINDOW — a real one. Casement pair, hinged at the jambs,
-       meeting at two handles in the center; the wall has thickness
-       (a 3D reveal tunnel) and the sky sits beyond the outer face.
-       Click: handles turn, sashes swing outward, and the camera
-       dollies through the opening (sky.js).
-       ============================================================ -->
-  <section class="window-sect" aria-label="The window">
-    <button class="window" type="button" aria-haspopup="dialog" aria-controls="sky" title="Open the window">
-      <span class="win-stage">
-        <span class="win-frame">
-          <!-- the outside, seen through the opening; bleeds past the
-               edges so the view holds while flying through -->
-          <span class="win-view"><span class="wv-sky">
-            <span class="wv-haze"></span>
-            <span class="wv-sun"></span>
-            <svg class="wv-cloud" viewBox="0 0 96 54" aria-hidden="true" focusable="false"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-            <span class="wv-stars wv-a"></span>
-            <span class="wv-stars wv-b"></span>
-            <svg class="wv-moon" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M62 8 A42 42 0 1 0 62 92 A52 52 0 0 1 62 8 Z"/></svg>
-          </span></span>
-          <!-- the wall the window is set into (occludes the view's bleed) -->
-          <span class="win-wall"></span>
-          <!-- the reveal: four planes of wall thickness -->
-          <span class="wt wt-l"></span>
-          <span class="wt wt-r"></span>
-          <span class="wt wt-t"></span>
-          <span class="wt wt-b"></span>
-          <!-- the pair of sashes, hinged at the jambs -->
-          <span class="sash sash-l">
-            <span class="sash-glass"></span>
-            <span class="muntin m-v"></span>
-            <span class="muntin m-h1"></span>
-            <span class="muntin m-h2"></span>
-            <span class="handle"></span>
-          </span>
-          <span class="sash sash-r">
-            <span class="sash-glass"></span>
-            <span class="muntin m-v"></span>
-            <span class="muntin m-h1"></span>
-            <span class="muntin m-h2"></span>
-            <span class="handle"></span>
-          </span>
-          <!-- painted casing around the opening -->
-          <span class="wc wc-t"></span>
-          <span class="wc wc-b"></span>
-          <span class="wc wc-l"></span>
-          <span class="wc wc-r"></span>
-        </span>
-        <span class="win-sill"></span>
-        <span class="win-shadow"></span>
-      </span>
-    </button>
-    <p class="win-hint" aria-hidden="true">look outside</p>
-  </section>
-
   <footer>
     <p class="contact">
       <a href="mailto:champpacifiquemukiza@gmail.com">Email</a>
@@ -317,79 +261,9 @@
 
 </main>
 
-<!-- ============================================================
-     OUTSIDE — through the window: the sky over Seattle.
-     Day: five clouds. Night: five bright stars in a constellation.
-     Both take you to the same five places. Esc or the arrow returns.
-     ============================================================ -->
-<!-- shared paint definitions (outside the hidden overlay so the
-     window's glass preview can resolve them too) -->
-<svg class="sky-defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-  <defs>
-    <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.68" stop-color="#eef0ec"/>
-      <stop offset="1" stop-color="#d5dcd8"/>
-    </linearGradient>
-  </defs>
-</svg>
-
-<div id="sky" class="sky" role="dialog" aria-modal="true" aria-label="Outside — the sky over Seattle" tabindex="-1" hidden>
-  <div class="sky-inner">
-    <div class="sky-fx sky-day-fx" aria-hidden="true">
-      <span class="sky-haze"></span>
-      <span class="sky-sun"></span>
-      <svg class="bgcloud bc1" viewBox="0 0 96 54"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-      <svg class="bgcloud bc2" viewBox="0 0 96 54"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-      <svg class="bgcloud bc3" viewBox="0 0 96 54"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-      <svg class="bgcloud bc4" viewBox="0 0 96 54"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-    </div>
-    <div class="sky-fx sky-night-fx" aria-hidden="true">
-      <span class="milky"></span>
-      <svg class="sky-moon" viewBox="0 0 100 100"><path d="M62 8 A42 42 0 1 0 62 92 A52 52 0 0 1 62 8 Z"/></svg>
-      <span class="meteor"></span>
-    </div>
-    <div class="stars stars-far" aria-hidden="true"></div>
-    <div class="stars" aria-hidden="true"></div>
-    <div class="stars stars-tw" aria-hidden="true"></div>
-    <svg class="sky-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M16 30 L37 17 L62 24 L80 40 L52 55" vector-effect="non-scaling-stroke"/>
-    </svg>
-    <nav class="sky-links" aria-label="Outside links">
-      <a class="sky-spot" style="--x:16%; --y:30%" href="mailto:champpacifiquemukiza@gmail.com">
-        <svg class="sky-cloud" viewBox="0 0 96 54" aria-hidden="true"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-        <svg class="sky-star" viewBox="-10 -10 20 20" style="--tw:0s" aria-hidden="true"><path d="M0 -7.5 L1.9 -1.9 L7.5 0 L1.9 1.9 L0 7.5 L-1.9 1.9 L-7.5 0 L-1.9 -1.9 Z"/></svg>
-        <span class="sky-name">Email</span>
-      </a>
-      <a class="sky-spot" style="--x:37%; --y:17%" href="https://github.com/champmk">
-        <svg class="sky-cloud" viewBox="0 0 96 54" aria-hidden="true"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-        <svg class="sky-star" viewBox="-10 -10 20 20" style="--tw:0.9s" aria-hidden="true"><path d="M0 -7.5 L1.9 -1.9 L7.5 0 L1.9 1.9 L0 7.5 L-1.9 1.9 L-7.5 0 L-1.9 -1.9 Z"/></svg>
-        <span class="sky-name">GitHub</span>
-      </a>
-      <a class="sky-spot" style="--x:62%; --y:24%" href="https://www.linkedin.com/in/champmukiza">
-        <svg class="sky-cloud" viewBox="0 0 96 54" aria-hidden="true"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-        <svg class="sky-star" viewBox="-10 -10 20 20" style="--tw:1.7s" aria-hidden="true"><path d="M0 -7.5 L1.9 -1.9 L7.5 0 L1.9 1.9 L0 7.5 L-1.9 1.9 L-7.5 0 L-1.9 -1.9 Z"/></svg>
-        <span class="sky-name">LinkedIn</span>
-      </a>
-      <a class="sky-spot" style="--x:80%; --y:40%" href="log.html">
-        <svg class="sky-cloud" viewBox="0 0 96 54" aria-hidden="true"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-        <svg class="sky-star" viewBox="-10 -10 20 20" style="--tw:2.6s" aria-hidden="true"><path d="M0 -7.5 L1.9 -1.9 L7.5 0 L1.9 1.9 L0 7.5 L-1.9 1.9 L-7.5 0 L-1.9 -1.9 Z"/></svg>
-        <span class="sky-name">Log</span>
-      </a>
-      <a class="sky-spot" style="--x:52%; --y:55%" href="colophon.html">
-        <svg class="sky-cloud" viewBox="0 0 96 54" aria-hidden="true"><path d="M18 50 q-13 0 -13 -10.5 q0 -9 9.5 -10.5 q0.5 -8.5 9 -10.5 q7 -1.6 11.5 2.5 q3.5 -8 12.5 -8 q10 0 13 8.5 q3.5 -3.2 9 -3.2 q9.5 0 11 9 q9.5 0.5 9.5 9.5 q0 13 -13.5 13.2 z"/></svg>
-        <svg class="sky-star" viewBox="-10 -10 20 20" style="--tw:3.4s" aria-hidden="true"><path d="M0 -7.5 L1.9 -1.9 L7.5 0 L1.9 1.9 L0 7.5 L-1.9 1.9 L-7.5 0 L-1.9 -1.9 Z"/></svg>
-        <span class="sky-name">Colophon</span>
-      </a>
-    </nav>
-    <a class="sky-home" href="#home">&larr; back inside</a>
-  </div>
-</div>
-
 <script src="intro.js" defer></script>
 <script src="lamp.js" defer></script>
 <script src="desk.js" defer></script>
 <script src="honest.js" defer></script>
-<script src="sky.js" defer></script>
 </body>
 </html>
