@@ -450,6 +450,166 @@ footer {
 .entry .links { margin-bottom: 0; }
 .links { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
 
+/* ============================================================
+   THE WINDOW — the room has an outside.
+   ============================================================ */
+.window-sect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 5rem;
+}
+.window {
+  width: 112px;
+  margin: 0; padding: 0; border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s var(--champ-ease);
+}
+.window:hover { transform: translateY(-2px); }
+.window:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 6px; }
+.window svg { display: block; width: 100%; height: auto; }
+.w-frame { fill: none; stroke: currentColor; stroke-width: 6; }
+.w-bars  { fill: none; stroke: currentColor; stroke-width: 4; }
+.w-sill  { fill: currentColor; }
+.w-glass { fill: #0b0e15; transition: fill 0.35s var(--champ-ease); }
+.w-mini-night circle { fill: #e9e5da; opacity: 0.85; }
+.w-mini-day path { fill: rgba(252, 251, 246, 0.95); }
+:root[data-theme="light"] .w-glass { fill: url(#wsky); }
+:root[data-theme="light"] .w-mini-night { display: none; }
+:root:not([data-theme="light"]) .w-mini-day { display: none; }
+.win-hint {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* ============================================================
+   OUTSIDE — the sky over Seattle. Opened by the window; the
+   overlay's clip-path starts as the pane and grows to the room.
+   ============================================================ */
+body.sky-open { overflow: hidden; }
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  outline: none;
+  background: radial-gradient(130% 100% at 50% 118%, #131720 0%, #08090d 55%, #050507 100%);
+  transition: clip-path 0.85s var(--champ-ease);
+}
+.sky[hidden] { display: none; }
+:root[data-theme="light"] .sky {
+  background: linear-gradient(#8ea9b9 0%, #b5c4c9 48%, #e3dcc8 88%, #f4f1ea 100%);
+}
+.sky-inner {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.14);
+  opacity: 0.4;
+  transition: transform 0.85s var(--champ-ease), opacity 0.5s var(--champ-ease);
+}
+.sky.open .sky-inner { transform: none; opacity: 1; }
+
+/* stars: one box-shadow field + a twinkling subset (night only) */
+.stars {
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.stars-tw { animation: twink 3.4s ease-in-out infinite alternate; }
+@keyframes twink { from { opacity: 1; } to { opacity: 0.35; } }
+:root[data-theme="light"] .stars { display: none; }
+
+/* the constellation the five bright stars make (night only) */
+.sky-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.sky-lines path { fill: none; stroke: #f4f2ec; stroke-width: 1; opacity: 0.10; }
+:root[data-theme="light"] .sky-lines { display: none; }
+
+/* the five places */
+.sky-spot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+}
+.sky-cloud { width: clamp(64px, 9vw, 96px); height: auto; animation: drift 8s ease-in-out infinite alternate; }
+.sky-cloud path { fill: rgba(252, 251, 246, 0.94); stroke: rgba(58, 70, 76, 0.5); stroke-width: 1.5; }
+.sky-spot:nth-child(2) .sky-cloud { animation-delay: -3s; }
+.sky-spot:nth-child(3) .sky-cloud { animation-delay: -5.5s; }
+.sky-spot:nth-child(4) .sky-cloud { animation-delay: -1.5s; }
+.sky-spot:nth-child(5) .sky-cloud { animation-delay: -7s; }
+@keyframes drift { from { transform: translateY(-4px); } to { transform: translateY(5px); } }
+
+.sky-star {
+  width: clamp(22px, 2.6vw, 30px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 7px rgba(255, 207, 90, 0.85));
+}
+.sky-star path {
+  fill: #ffd973;
+  animation: starpulse 2.8s ease-in-out infinite alternate;
+  animation-delay: var(--tw, 0s);
+  transform-origin: center;
+}
+@keyframes starpulse { from { opacity: 0.8; transform: scale(0.94); } to { opacity: 1; transform: scale(1.06); } }
+
+:root[data-theme="light"] .sky-star { display: none; }
+:root:not([data-theme="light"]) .sky-cloud { display: none; }
+
+.sky-name {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #8d8a81;
+  transition: color 0.15s var(--champ-ease);
+}
+:root[data-theme="light"] .sky-name { color: #4b585f; }
+.sky-spot:hover .sky-name, .sky-spot:focus-visible .sky-name { color: var(--accent); }
+.sky-spot:focus-visible { outline: none; }
+
+/* the way back — present, never loud */
+.sky-home {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.7rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #8d8a81;
+}
+:root[data-theme="light"] .sky-home { color: #4b585f; }
+.sky-home:hover { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky { transition: none; }
+  .sky-inner { transition: none; transform: none; opacity: 1; }
+  .sky-cloud, .sky-star path, .stars-tw { animation: none; }
+}
+
 footer {
   margin-top: 4.5rem;
   padding-top: 2.2rem;
@@ -552,7 +712,8 @@ body.grid::after {
     --bg: #ffffff; --ink: #111; --soft: #222; --muted: #666;
     --line: #ddd; --faint: #bbb;
   }
-  #intro, .lamp, .scroll-cue, .skip, .defcard, .obj { display: none !important; }
+  #intro, .lamp, .scroll-cue, .skip, .defcard, .obj,
+  .window-sect, .sky { display: none !important; }
   body { background: #fff; }
   .hero { min-height: auto; padding: 1.2rem 0 0.5rem; }
   .wordmark-wrap::before { content: none; }
