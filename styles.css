@@ -97,10 +97,8 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
    against black even when the underlying theme is daytime. */
 body.intro-active .lamp { z-index: 10001; color: #f4f2ec; opacity: 0.18; }
 body.intro-active .l-glow  { opacity: 0; }
-body.intro-active .l-bulb  { fill: #9a948c; filter: none; }
 body.intro-active.intro-lit .lamp { opacity: 1; transition: opacity 0.12s var(--champ-ease); }
 body.intro-active.intro-lit .l-glow { opacity: 0.95; }
-body.intro-active.intro-lit .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255, 196, 70, 0.9)); }
 
 /* ============================================================
    HERO / HOME
@@ -153,6 +151,7 @@ body.intro-active.intro-lit .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px
   transform: translateY(var(--seat));
   z-index: 4;
   -webkit-tap-highlight-color: transparent;
+  touch-action: none;   /* head-aiming and chain-pulling work on touch */
 }
 .lamp svg { width: 100%; height: auto; display: block; overflow: visible; }
 .lamp:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 8px; }
@@ -177,6 +176,36 @@ body.intro-active.intro-lit .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px
 :root[data-theme="light"] .l-spec  { fill: currentColor; opacity: 0.3; }
 :root[data-theme="light"] .l-glow  { opacity: 0; }
 :root[data-theme="light"] .lamp svg { filter: drop-shadow(0.028em 0.05em 0.04em rgba(27, 26, 23, 0.18)); }
+
+/* ---- Aimable head: grab the shade and point the light ---- */
+.l-head {
+  transform-box: view-box;              /* user-unit transforms */
+  transform-origin: 104px 72px;         /* the head pivot */
+  cursor: grab;
+}
+.lamp.aiming .l-head { cursor: grabbing; }
+
+/* The visible cone of light. Real at night, gone by day. */
+.l-beam { fill: url(#beamGrad); opacity: 0.75; transition: opacity 0.35s ease; pointer-events: none; }
+:root[data-theme="light"] .l-beam { opacity: 0; }
+body.intro-active .l-beam { opacity: 0; }
+body.intro-active.intro-lit .l-beam { opacity: 0.9; }
+.lamp.flicker .l-beam { animation: lampFlick 0.6s linear; }
+
+/* Ball-chain pull switch */
+.l-chain { transform-box: view-box; cursor: grab; }
+.l-chainline { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 2 1.6; stroke-linecap: round; }
+.l-handle { fill: currentColor; }
+
+/* Burnout: the filament is gone. No glow, no beam, cracked glass —
+   and the room stays dark until a new bulb is screwed in. */
+.l-crack { display: none; fill: none; stroke: #17150f; stroke-width: 0.8; stroke-linecap: round; }
+.lamp.burnt .l-glow  { opacity: 0 !important; }
+.lamp.burnt .l-beam  { opacity: 0 !important; }
+.lamp.burnt .l-bulb  { fill: #4a463f !important; filter: none !important; cursor: pointer; }
+.lamp.burnt .l-mouth { fill: #2b2823 !important; }
+.lamp.burnt .l-spec  { opacity: 0.12 !important; }
+.lamp.burnt .l-crack { display: block; }
 
 /* The pool of lamplight on the wall behind the wordmark — night only */
 .wordmark-wrap::before {
