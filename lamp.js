@@ -20,6 +20,7 @@
     root.dataset.theme = toLight ? "light" : "dark";
     try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
     syncPressed();
+    document.dispatchEvent(new CustomEvent("champ:theme"));
   }
 
   lamp.addEventListener("click", function () {

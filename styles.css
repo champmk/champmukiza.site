@@ -7,6 +7,7 @@
   --soft:    #cfccc4;   /* body text */
   --muted:   #8a877e;   /* meta, labels */
   --line:    #232220;   /* hairlines on dark */
+  --faint:   #3a3833;   /* underlines, dot separators */
   --accent:  #16e16a;   /* vibrant green (accent) */
   --white:   #f3f0e8;   /* warm white panel */
 
@@ -14,19 +15,21 @@
   --serif:   "Newsreader", Georgia, serif;
   --mono:    "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* intro timing */
-  --t1: 0.50s;   /* each panel sweep */
+  /* the one easing every motion on this site uses */
+  --champ-ease: cubic-bezier(0.22, 0.72, 0.14, 1);
 
   color-scheme: dark;
 }
 
-/* Light theme — the lamp turns it on */
+/* Daytime — the lamp is off because the room is already lit.
+   (Night is the default: dark room, lamp on.) */
 :root[data-theme="light"] {
   --bg:    #f4f1ea;
   --ink:   #1b1a17;
   --soft:  #35332c;
   --muted: #76736a;
   --line:  #e3dfd4;
+  --faint: #cfc9bc;
   color-scheme: light;
 }
 
@@ -58,7 +61,7 @@ body.intro-active { overflow: hidden; }
 a {
   color: var(--ink);
   text-decoration: underline;
-  text-decoration-color: #3a3833;
+  text-decoration-color: var(--faint);
   text-underline-offset: 0.18em;
   text-decoration-thickness: 1px;
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
@@ -66,62 +69,38 @@ a {
 a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 /* ============================================================
-   INTRO OVERLAY
+   INTRO OVERLAY — darkness with a hole where the lamplight is.
+   --mx/--my: the bulb's viewport position (set by intro.js).
+   --r:       the light pool's radius, animated by intro.js.
+   The gradient's soft outer band is the penumbra; light never
+   has a hard edge, so neither does the reveal.
    ============================================================ */
 #intro {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--white);   /* opens on white → orange → black */
-  overflow: hidden;
   pointer-events: none;
+  --mx: 50vw;
+  --my: 42vh;
+  --r: 0px;
+  background: radial-gradient(
+    circle at var(--mx) var(--my),
+    rgba(6, 6, 5, 0)    calc(var(--r) * 0.45),
+    rgba(6, 6, 5, 0.88) var(--r),
+    #060605             calc(var(--r) + 42vmin)
+  );
 }
 #intro.done { display: none; }
 
-#intro .p,
-#intro .bars {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
-}
-
-/* Step 1 — orange sweeps in from the LEFT */
-#intro .p-orange {
-  background: var(--accent);
-  transform: translateX(-101%);
-}
-/* Step 2 — black layer (as 6 bars) sweeps in from the RIGHT … */
-#intro .bars {
-  display: flex;
-  transform: translateX(101%);
-}
-#intro .bars span {
-  flex: 1 1 0;
-  background: var(--bg);
-  transform: translateY(0);
-  will-change: transform;
-}
-
-/* ---- the run: triggered by JS adding .play. Three steps, no pauses. ---- */
-#intro.play .p-orange { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0s forwards; }
-#intro.play .bars     { animation: sweepX 0.45s cubic-bezier(.76,0,.24,1) 0.45s forwards; }
-
-/* Step 3 — bars retract multi-directionally (odd up, even down).
-   Overlaps the hero reveal so the motion is continuous. */
-#intro.play .bars span {
-  animation: barOut 0.55s cubic-bezier(.7,0,.2,1) forwards;
-  animation-delay: calc(1.05s + var(--i) * 0.05s);
-}
-#intro.play .bars span:nth-child(odd)  { --dir: -102%; }
-#intro.play .bars span:nth-child(even) { --dir:  102%; }
-
-@keyframes sweepX { to { transform: translateX(0); } }
-@keyframes barOut { to { transform: translateY(var(--dir)); } }
-
-/* Reveal: drop the overlay's own backdrop so the bars uncover the REAL page
-   (not a black box). Applied while the bars still fully cover, so it's unseen. */
-#intro.reveal { background: transparent; }
-#intro.reveal .p-orange { display: none; }
+/* While the room is dark the lamp sits ABOVE the darkness — a dim
+   silhouette until it flickers on. Forced to a light ink so it reads
+   against black even when the underlying theme is daytime. */
+body.intro-active .lamp { z-index: 10001; color: #f4f2ec; opacity: 0.18; }
+body.intro-active .l-glow  { opacity: 0; }
+body.intro-active .l-bulb  { fill: #9a948c; filter: none; }
+body.intro-active.intro-lit .lamp { opacity: 1; transition: opacity 0.12s var(--champ-ease); }
+body.intro-active.intro-lit .l-glow { opacity: 0.95; }
+body.intro-active.intro-lit .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255, 196, 70, 0.9)); }
 
 /* ============================================================
    HERO / HOME
@@ -146,6 +125,8 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   color: var(--ink);
   margin: 0;
   max-width: 100%;
+  position: relative;   /* paints above the lamplight pool (::before) */
+  z-index: 1;
 }
 .wordmark .w-champ,
 .wordmark .dotmk { display: inline-block; will-change: transform; }
@@ -176,22 +157,46 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .lamp svg { width: 100%; height: auto; display: block; overflow: visible; }
 .lamp:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 8px; }
 
+/* Night (default): it's dark, so the lamp is ON. Day: sunlight fills
+   the room, so the lamp is off and merely casts a soft paper shadow. */
 .l-arm    { fill: none; stroke: currentColor; stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; }
 .l-spring { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
 .l-solid  { fill: currentColor; }
 .l-shade  { fill: currentColor; }
-.l-mouth  { fill: #2b2823; }                                               /* shadowed interior seen up into the unlit shade */
+.l-mouth  { fill: #ffe49b; }                                                /* warm-lit cavity while ON */
 .l-base   { fill: currentColor; }                                          /* screw base mounting the bulb into the shade */
 .l-joint  { fill: currentColor; }
 .l-bolt   { fill: var(--bg); }
-.l-bulb   { fill: #9a948c; transition: fill 0.3s ease, filter 0.3s ease; } /* dim, desaturated glass when OFF (dark) */
-.l-spec   { fill: currentColor; opacity: 0.3; }                             /* glassy specular highlight */
-.l-glow   { fill: #ffcf5a; opacity: 0; transition: opacity 0.35s ease; }
+.l-bulb   { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255,196,70,0.9));
+            transition: fill 0.3s ease, filter 0.3s ease; }
+.l-spec   { fill: #fff8e6; opacity: 0.75; }                                 /* hot spot on the lit glass */
+.l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s ease; }
 
-:root[data-theme="light"] .l-mouth { fill: #ffe49b; }                      /* warm-lit cavity when ON */
-:root[data-theme="light"] .l-bulb { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255,196,70,0.9)); }
-:root[data-theme="light"] .l-spec { fill: #fff8e6; opacity: 0.75; }        /* hot spot when lit */
-:root[data-theme="light"] .l-glow { opacity: 0.95; }
+:root[data-theme="light"] .l-mouth { fill: #3b372f; }                       /* shadowed interior of the unlit shade */
+:root[data-theme="light"] .l-bulb  { fill: #8b857c; filter: none; }         /* dim, desaturated glass when off */
+:root[data-theme="light"] .l-spec  { fill: currentColor; opacity: 0.3; }
+:root[data-theme="light"] .l-glow  { opacity: 0; }
+:root[data-theme="light"] .lamp svg { filter: drop-shadow(0.028em 0.05em 0.04em rgba(27, 26, 23, 0.18)); }
+
+/* The pool of lamplight on the wall behind the wordmark — night only */
+.wordmark-wrap::before {
+  content: "";
+  position: absolute;
+  left: -14%;
+  top: -110%;
+  width: 110%;
+  height: 300%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 52% 40% at 26% 38%,
+    rgba(255, 205, 92, 0.13),
+    rgba(255, 205, 92, 0.045) 46%,
+    transparent 72%
+  );
+}
+:root[data-theme="light"] .wordmark-wrap::before { content: none; }
+:root[data-theme="light"] .wordmark { text-shadow: 0.012em 0.028em 0.05em rgba(27, 26, 23, 0.10); }
 
 /* flicker on click — the light stutters before settling into the new state */
 .lamp.flicker .l-glow { animation: lampFlick 0.6s linear; }
@@ -231,34 +236,8 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 @media (max-width: 480px) { .wordmark-wrap { --wm: 3rem; } }
 @media (max-width: 340px) { .wordmark-wrap { --wm: 2.5rem; } }
 
-/* Hero reveal — each element flies in from its own direction, timed to
-   overlap the bar split so the whole thing reads as one motion. */
-.intro-active .w-champ,
-.intro-active .dotmk,
-.intro-active .role,
-.intro-active .tag,
-.intro-active .scroll-cue { opacity: 0; }
-
-/* The lamp stays painted (it sits behind the intro overlay); it only drops in
-   via transform, never fading from 0 — so an early frame can never be blank. */
-body.revealed .lamp { animation: lampDrop 0.6s cubic-bezier(.2,.8,.2,1) 0.55s both; }
-@keyframes lampDrop {
-  from { transform: translateY(calc(var(--seat) - 0.55em)); }
-  to   { transform: translateY(var(--seat)); }
-}
-
-body.revealed .w-champ    { animation: dropTop 1.0s cubic-bezier(.2,.75,.2,1) 0s both; }    /* CHAMP from the top */
-body.revealed .dotmk      { animation: inRight 1.0s cubic-bezier(.2,.75,.2,1) 0.15s both; } /* .MK from the right */
-body.revealed .role       { animation: riseUp 0.7s ease 0.62s both; }
-body.revealed .tag        { animation: riseUp 0.7s ease 0.78s both; }
-body.revealed .scroll-cue { animation: fadeUp 0.75s ease 0.98s both; }
-body.revealed .scroll-cue::after { animation: growLine 0.65s cubic-bezier(.4,0,.2,1) 1.1s both; }
-
-@keyframes dropTop { from { opacity: 0; transform: translateY(-120%); } to { opacity: 1; transform: translateY(0); } }
-@keyframes inRight { from { opacity: 0; transform: translateX(120%); }  to { opacity: 1; transform: translateX(0); } }
-@keyframes riseUp  { from { opacity: 0; transform: translateY(16px); }   to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeUp  { from { opacity: 0; transform: translateY(8px); }    to { opacity: 0.7; transform: translateY(0); } }
-@keyframes growLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+/* No per-element entrances. The page is simply THERE in the dark, and the
+   lamplight finds it — the reveal is the light itself, nothing flies in. */
 
 .scroll-cue {
   position: absolute;
@@ -275,6 +254,7 @@ body.revealed .scroll-cue::after { animation: growLine 0.65s cubic-bezier(.4,0,.
   text-decoration: none;
   text-align: center;
   color: var(--muted);
+  opacity: 0.7;
 }
 .scroll-cue::after {
   content: "";
@@ -284,7 +264,7 @@ body.revealed .scroll-cue::after { animation: growLine 0.65s cubic-bezier(.4,0,.
   background: linear-gradient(var(--accent), transparent);
   transform-origin: top;
 }
-.scroll-cue:hover { color: var(--accent); }
+.scroll-cue:hover { color: var(--accent); opacity: 1; }
 
 /* ============================================================
    CONTENT
@@ -312,7 +292,7 @@ footer {
   color: var(--muted);
   margin: 0;
 }
-.dot { color: #3a3833; margin: 0 0.5em; }
+.dot { color: var(--faint); margin: 0 0.5em; }
 
 .label {
   font-family: var(--mono);
@@ -366,6 +346,8 @@ footer .contact { margin-bottom: 0.8rem; }
   color: var(--muted);
   margin: 0;
 }
+.desk-line { margin-bottom: 0.5rem; }
+.desk-line[hidden] { display: none; }
 
 /* ---- Skip link ---- */
 .skip {
@@ -380,22 +362,9 @@ footer .contact { margin-bottom: 0.8rem; }
 ::selection { background: var(--accent); color: #0a0a0a; }
 
 /* ============================================================
-   Reduced motion — no intro, no reveal animation
+   Reduced motion — no intro, no flicker, page is just there
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   #intro { display: none; }
-  .intro-active .w-champ,
-  .intro-active .dotmk,
-  .intro-active .role,
-  .intro-active .tag,
-  .intro-active .scroll-cue,
-  .intro-active .lamp { opacity: 1; }
-  body.revealed .w-champ,
-  body.revealed .dotmk,
-  body.revealed .role,
-  body.revealed .tag,
-  body.revealed .scroll-cue { animation: none; opacity: 1; }
-  body.revealed .lamp { animation: none; opacity: 1; transform: translateY(var(--seat)); }
-  body.revealed .scroll-cue::after { animation: none; transform: scaleY(1); }
-  .scroll-cue { opacity: 0.7; }
+  body.intro-active .lamp { opacity: 1; z-index: 4; color: var(--ink); }
 }
