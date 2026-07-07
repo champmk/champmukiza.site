@@ -16,9 +16,10 @@
   var stage = win.querySelector(".win-stage");
   var frame = win.querySelector(".win-frame");
   var home = sky.querySelector(".sky-home");
+  var mainEl = document.querySelector("main");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var PERSPECTIVE = 1200;   // must match .window-sect { perspective }
+  var EASE = "cubic-bezier(0.5, 0.04, 0.16, 1)";
   var open = false;
   var busy = false;
 
@@ -84,11 +85,18 @@
 
     win.classList.add("opening");   // handles turn, sashes swing (CSS)
 
-    /* dolly: bring the opening plane almost to the camera */
-    var need = (Math.max(window.innerWidth, window.innerHeight) * 2.2) / Math.max(o.width, 120);
-    var tz = Math.min(PERSPECTIVE * (1 - 1 / need), PERSPECTIVE * 0.94);
+    /* the travel: the whole page moves toward the opening (so the room
+       slides past you), plus a real translateZ inside the scene so the
+       reveal walls and open sashes diverge with true parallax */
+    var mr = mainEl.getBoundingClientRect();
+    var k = Math.max(window.innerWidth / Math.max(o.width, 120),
+                     window.innerHeight / Math.max(o.height, 120)) * 1.3;
+    mainEl.style.transformOrigin =
+      (o.left - mr.left + o.width / 2) + "px " + (o.top - mr.top + o.height / 2) + "px";
+    mainEl.style.transition = "transform 1.15s " + EASE;
     window.setTimeout(function () {
-      stage.style.transform = "translateZ(" + tz + "px)";
+      mainEl.style.transform = "scale(" + k + ")";
+      stage.style.transform = "translateZ(190px)";
     }, 420);
 
     /* crossfade to the real sky as the preview fills the screen */
@@ -103,12 +111,16 @@
   function finishOpen(ms) {
     window.setTimeout(function () {
       sky.focus();
-      /* reset the stage silently behind the opaque sky */
+      /* reset the room silently behind the opaque sky */
       win.classList.remove("opening");
       stage.style.transition = "none";
       stage.style.transform = "";
+      mainEl.style.transition = "none";
+      mainEl.style.transform = "";
       void stage.offsetWidth;
       stage.style.transition = "";
+      mainEl.style.transition = "";
+      mainEl.style.transformOrigin = "";
       sect.style.perspectiveOrigin = "";
       document.body.classList.remove("sky-opening");
       busy = false;

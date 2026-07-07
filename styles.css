@@ -493,8 +493,8 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.7rem;
-  margin-top: 5.5rem;
+  gap: 5rem;          /* clear of the wall band (4.5rem) */
+  margin-top: 7rem;   /* likewise above */
 }
 body.sky-opening .window-sect { z-index: 9400; }
 
@@ -507,6 +507,8 @@ body.sky-opening .window-sect { z-index: 9400; }
   cursor: pointer;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
+  transform-style: preserve-3d;   /* the button must pass the perspective through,
+                                     or the whole scene flattens to orthographic */
 }
 .window:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
 
@@ -533,11 +535,13 @@ body.sky-opening .window-sect { z-index: 9400; }
    the opening so the view holds while flying through ---- */
 .win-view {
   position: absolute;
-  inset: -42%;
+  inset: -10%;   /* just enough bleed to cover perspective divergence at rest */
   display: block;
   transform: translateZ(calc(-1 * var(--wd) - 26px));
   overflow: hidden;
+  transition: inset 1.15s cubic-bezier(0.5, 0.04, 0.16, 1);
 }
+.window.opening .win-view { inset: -46%; }   /* grows as you fly through */
 .wv-sky { position: absolute; inset: 0; display: block; background: var(--skybg); }
 .wv-haze { position: absolute; inset: 0; display: block; background: radial-gradient(90% 55% at 78% 8%, rgba(255, 246, 218, 0.30), transparent 62%); }
 .wv-sun {
@@ -558,13 +562,13 @@ body.sky-opening .window-sect { z-index: 9400; }
 :root:not([data-theme="light"]) .wv-haze,
 :root:not([data-theme="light"]) .wv-cloud { display: none; }
 
-/* ---- the wall the window is set into: a page-colored ring that
-   occludes the view's bleed (box-shadow: paints, never scrolls) ---- */
+/* ---- the wall the window is set into: a page-colored band just wide
+   enough to occlude the view's bleed — never the page's own text ---- */
 .win-wall {
   position: absolute;
   inset: 0;
   display: block;
-  box-shadow: 0 0 0 78vmax var(--bg);
+  box-shadow: 0 0 0 4.5rem var(--bg);
   transition: box-shadow 0.35s var(--champ-ease);
 }
 
