@@ -222,10 +222,12 @@ body.intro-active .l-beam { opacity: 0; }
 body.intro-active.intro-lit .l-beam { opacity: 0.9; }
 .lamp.flicker .l-beam { animation: lampFlick 0.6s linear; }
 
-/* Ball-chain pull switch */
-.l-chain { transform-box: view-box; cursor: grab; }
-.l-chainline { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 2 1.6; stroke-linecap: round; }
-.l-handle { fill: currentColor; }
+/* Ball-chain pull switch — quiet hardware, not a feature.
+   Hangs plumb from the shade rim (JS counter-rotates it when the head
+   is aimed, because gravity doesn't care where the lamp points). */
+.l-chain { transform-box: view-box; transform-origin: 117.6px 99.5px; cursor: grab; }
+.l-chainline { fill: none; stroke: currentColor; stroke-width: 1.1; stroke-dasharray: 1.5 1.4; stroke-linecap: round; opacity: 0.75; }
+.l-handle { fill: currentColor; opacity: 0.85; }
 
 /* Burnout: the filament is gone. No glow, no beam, cracked glass —
    and the room stays dark until a new bulb is screwed in. */
@@ -237,21 +239,24 @@ body.intro-active.intro-lit .l-beam { opacity: 0.9; }
 .lamp.burnt .l-spec  { opacity: 0.12 !important; }
 .lamp.burnt .l-crack { display: block; }
 
-/* The pool of lamplight on the wall behind the wordmark — night only */
+/* The pool of lamplight on the wall behind the wordmark — night only.
+   The canvas is ~4x the wordmark and the gradient dies at ~70% of its
+   radius, so the light reaches zero long before any box edge: no seams,
+   just one dark wall with a warm patch where the lamp is. */
 .wordmark-wrap::before {
   content: "";
   position: absolute;
-  left: -14%;
-  top: -110%;
-  width: 110%;
-  height: 300%;
+  left: -150%;
+  top: -350%;
+  width: 400%;
+  height: 1000%;
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(
-    ellipse 52% 40% at 26% 38%,
-    rgba(255, 205, 92, 0.13),
-    rgba(255, 205, 92, 0.045) 46%,
-    transparent 72%
+    ellipse 16% 12% at 43% 31%,
+    rgba(255, 205, 92, 0.12),
+    rgba(255, 205, 92, 0.04) 46%,
+    rgba(255, 205, 92, 0) 72%
   );
 }
 :root[data-theme="light"] .wordmark-wrap::before { content: none; }

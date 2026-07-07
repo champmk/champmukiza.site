@@ -118,6 +118,16 @@
     };
   }
 
+  /* ---------- aim state (shared: the chain must hang plumb) ---------- */
+  var MIN_A = -30, MAX_A = 24;   // don't let it stare at its own arm
+  var angle = 0;
+
+  /* The chain is inside the rotating head group, so it counter-rotates
+     by the head's angle to keep pointing at the floor. */
+  function chainTransform(dy) {
+    return "rotate(" + (-angle) + "deg) translateY(" + (dy || 0) + "px)";
+  }
+
   /* ---------- pull the chain ---------- */
   var chainDrag = null;
   chain.addEventListener("pointerdown", function (e) {
@@ -133,22 +143,20 @@
     var p = pivotClient();
     chainDrag.dy = Math.max(0, Math.min(9, (e.clientY - chainDrag.y0) / p.scale));
     if (chainDrag.dy > 1.5) dragged = true;
-    chain.style.transform = "translateY(" + chainDrag.dy + "px)";
+    chain.style.transform = chainTransform(chainDrag.dy);
   });
   function chainRelease() {
     if (!chainDrag) return;
     var pulled = chainDrag.dy > 5;
     chainDrag = null;
     chain.style.transition = reduce ? "" : "transform 0.3s cubic-bezier(0.3, 1.8, 0.4, 1)";
-    chain.style.transform = "translateY(0)";
+    chain.style.transform = chainTransform(0);
     if (pulled) { tick(); toggle(); }
   }
   chain.addEventListener("pointerup", chainRelease);
   chain.addEventListener("pointercancel", chainRelease);
 
   /* ---------- aim the head ---------- */
-  var MIN_A = -30, MAX_A = 24;   // don't let it stare at its own arm
-  var angle = 0;
   var aim = null;
 
   function pointerAngle(e) {
@@ -169,6 +177,7 @@
     angle = Math.max(MIN_A, Math.min(MAX_A, next));
     if (Math.abs(angle - aim.start) > 2) dragged = true;
     head.style.transform = "rotate(" + angle + "deg)";
+    chain.style.transform = chainTransform(0);   // still hangs straight down
   });
   function aimRelease() {
     aim = null;
