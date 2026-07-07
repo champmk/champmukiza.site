@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<script>try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){var h=+new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',hourCycle:'h23'}).format(new Date());t=(h>=19||h<7)?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
+<title>Colophon — CHAMP.MK</title>
+<meta name="description" content="How this site is made: the type, the lamp, and the no-build rule.">
+<link rel="canonical" href="https://champmukiza.site/colophon.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=7">
+</head>
+<body class="revealed">
+
+<main>
+  <section class="page">
+    <a class="page-home" href="/">&larr; champ.mk</a>
+    <h1>Colophon</h1>
+
+    <h2>The premise</h2>
+    <p>
+      The light on this site is real. It comes from one lamp; night here is
+      night at my desk in Seattle; the lamp turns on because it&rsquo;s dark,
+      not because you flipped a setting. Every addition either obeys that
+      physics or it doesn&rsquo;t ship. The reasons behind each change live in
+      the <a href="log.html">log</a>.
+    </p>
+
+    <h2>The lamp</h2>
+    <p>
+      An anglepoise, drawn by hand in SVG &mdash; arm, tension rods, three
+      joints, a pear-shaped bulb seated up inside the shade. It is the theme
+      switch, but it doesn&rsquo;t behave like a switch: it flickers before it
+      settles, its head aims where you drag it, its chain pulls, and its bulb
+      can burn out. It sits on the H because that&rsquo;s where the light
+      needed to be.
+    </p>
+
+    <h2>Type</h2>
+    <p>
+      <strong>Space Grotesk</strong> for the wordmark and headings.
+      <strong>Newsreader</strong>, an optical-size serif, for reading.
+      <strong>Space Mono</strong> for the small print &mdash; labels, dates,
+      and lines like the one ticking in the footer.
+    </p>
+
+    <h2>How it&rsquo;s built</h2>
+    <p>
+      Hand-written HTML, CSS, and a little vanilla JavaScript. No framework,
+      no build step, no bundler, no analytics, no cookies. What View Source
+      shows you is the actual site, the way I wrote it &mdash; the
+      <a href="https://github.com/champmk/champmukiza.site">repository</a> is
+      public. The footer of the front page names the exact commit you&rsquo;re
+      looking at.
+    </p>
+
+    <h2>The name</h2>
+    <p lang="fr">
+      <em>champ</em>, n.m. &mdash; French: <span lang="en">field. As in
+      <em>champ de vision</em>, field of view; <em>profondeur de champ</em>,
+      depth of field; <em>champ lumineux</em>, light field.</span>
+      <span lang="en">My full first name, Champ-Pacifique, translates to
+      &ldquo;peaceful field.&rdquo; The lamp and I were always going to get
+      along.</span>
+    </p>
+
+    <p class="colophon desk-line" id="desk-clock" hidden></p>
+  </section>
+
+  <footer>
+    <p class="contact">
+      <a href="/">Home</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="log.html">Log</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://github.com/champmk/champmukiza.site">Source</a>
+    </p>
+    <p class="colophon">CHAMP.MK &middot; Seattle &middot; 2026</p>
+  </footer>
+</main>
+
+<script src="desk.js" defer></script>
+</body>
+</html>
