@@ -395,8 +395,36 @@ footer {
   border-top: 1px solid var(--line);
 }
 
-.entry { margin: 0 0 2.7rem; }
+.entry { margin: 0 0 2.7rem; position: relative; }
 .entry:last-child { margin-bottom: 0; }
+
+/* ---- The margin objects: one per project, drawn in the lamp's dialect.
+   Each draws itself in when the light (the viewport) finds it. ---- */
+.obj {
+  position: absolute;
+  right: 100%;
+  top: 0.15rem;
+  margin-right: 2.6rem;
+  width: 46px;
+  height: 46px;
+  color: var(--muted);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+.obj path, .obj rect, .obj circle {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.2s var(--champ-ease) 0.1s;
+}
+.entry.lit .obj path, .entry.lit .obj rect, .entry.lit .obj circle { stroke-dashoffset: 0; }
+@media (max-width: 1160px) { .obj { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .obj path, .obj rect, .obj circle { stroke-dashoffset: 0; transition: none; }
+}
 
 .entry h3 {
   font-family: var(--display);
@@ -519,7 +547,7 @@ body.grid::after {
     --bg: #ffffff; --ink: #111; --soft: #222; --muted: #666;
     --line: #ddd; --faint: #bbb;
   }
-  #intro, .lamp, .scroll-cue, .skip, .defcard { display: none !important; }
+  #intro, .lamp, .scroll-cue, .skip, .defcard, .obj { display: none !important; }
   body { background: #fff; }
   .hero { min-height: auto; padding: 1.2rem 0 0.5rem; }
   .wordmark-wrap::before { content: none; }
