@@ -37,7 +37,7 @@
 body,
 main, main *,
 footer, footer * {
-  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, fill 0.3s ease;
+  transition: background-color 0.35s var(--champ-ease), border-color 0.35s var(--champ-ease), color 0.35s var(--champ-ease), fill 0.3s var(--champ-ease);
 }
 
 * { box-sizing: border-box; }
@@ -64,7 +64,7 @@ a {
   text-decoration-color: var(--faint);
   text-underline-offset: 0.18em;
   text-decoration-thickness: 1px;
-  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  transition: color 0.15s var(--champ-ease), text-decoration-color 0.15s var(--champ-ease);
 }
 a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
@@ -129,6 +129,36 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 .wordmark .w-champ,
 .wordmark .dotmk { display: inline-block; will-change: transform; }
 .wordmark .dotmk { color: var(--accent); }
+.wordmark .w-champ { cursor: help; outline: none; }
+.wordmark .w-champ:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+/* ---- The dictionary entry. His name is doing design work. ---- */
+.defcard {
+  position: absolute;
+  top: calc(100% + 1.1rem);
+  left: 0;
+  z-index: 6;
+  display: block;
+  width: max-content;
+  max-width: min(24rem, 88vw);
+  padding: 0.85rem 1.1rem 0.9rem;
+  text-align: left;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  font-family: var(--serif);
+  font-size: clamp(0.86rem, 0.8rem + 0.3vw, 0.98rem);
+  line-height: 1.7;
+  color: var(--soft);
+  letter-spacing: normal;
+}
+.defcard[hidden] { display: none; }
+.defcard .def-word { font-style: italic; color: var(--ink); }
+.defcard .def-ipa  { font-family: var(--mono); font-size: 0.82em; color: var(--muted); }
+.defcard .def-pos  { color: var(--muted); }
+.defcard b { color: var(--ink); font-weight: 600; }
+.defcard i { color: var(--ink); }
+.defcard .def-note { font-family: var(--mono); font-size: 0.76em; color: var(--muted); letter-spacing: 0.04em; }
 
 /* ---- Lamp (theme toggle), seated on top of CHAMP ---- */
 /* --wm == the wordmark font-size, shared by the wordmark and the lamp so the
@@ -167,9 +197,9 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 .l-joint  { fill: currentColor; }
 .l-bolt   { fill: var(--bg); }
 .l-bulb   { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255,196,70,0.9));
-            transition: fill 0.3s ease, filter 0.3s ease; }
+            transition: fill 0.3s var(--champ-ease), filter 0.3s var(--champ-ease); }
 .l-spec   { fill: #fff8e6; opacity: 0.75; }                                 /* hot spot on the lit glass */
-.l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s ease; }
+.l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s var(--champ-ease); }
 
 :root[data-theme="light"] .l-mouth { fill: #3b372f; }                       /* shadowed interior of the unlit shade */
 :root[data-theme="light"] .l-bulb  { fill: #8b857c; filter: none; }         /* dim, desaturated glass when off */
@@ -186,7 +216,7 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 .lamp.aiming .l-head { cursor: grabbing; }
 
 /* The visible cone of light. Real at night, gone by day. */
-.l-beam { fill: url(#beamGrad); opacity: 0.75; transition: opacity 0.35s ease; pointer-events: none; }
+.l-beam { fill: url(#beamGrad); opacity: 0.75; transition: opacity 0.35s var(--champ-ease); pointer-events: none; }
 :root[data-theme="light"] .l-beam { opacity: 0; }
 body.intro-active .l-beam { opacity: 0; }
 body.intro-active.intro-lit .l-beam { opacity: 0.9; }
@@ -314,6 +344,32 @@ footer {
   margin: 0 0 1.5rem;
   max-width: 34rem;
 }
+.about .lede::first-letter {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 3em;
+  float: left;
+  line-height: 0.85;
+  padding: 0.03em 0.12em 0 0;
+  color: var(--ink);
+}
+
+/* ---- Margin note (Tufte-style). Falls back inline on narrow screens. ---- */
+.entry p { position: relative; }
+.note {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 2.4rem;
+  width: 12rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.note::before { content: "— "; color: var(--accent); }
+@media (max-width: 1160px) {
+  .note { position: static; display: block; width: auto; margin: 0.45rem 0 0; }
+}
 
 .contact {
   font-family: var(--mono);
@@ -429,6 +485,60 @@ code { font-family: var(--mono); font-size: 0.92em; color: var(--muted); }
 .skip:focus { left: 0; }
 
 ::selection { background: var(--accent); color: #0a0a0a; }
+
+/* ============================================================
+   Baseline grid — press "g". For the designers who check.
+   ============================================================ */
+body.grid::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background:
+    linear-gradient(to right,
+      transparent calc(50% - 20.5rem - 1px),
+      rgba(22, 225, 106, 0.35) calc(50% - 20.5rem - 1px),
+      rgba(22, 225, 106, 0.35) calc(50% - 20.5rem),
+      transparent calc(50% - 20.5rem)),
+    linear-gradient(to right,
+      transparent calc(50% + 20.5rem),
+      rgba(22, 225, 106, 0.35) calc(50% + 20.5rem),
+      rgba(22, 225, 106, 0.35) calc(50% + 20.5rem + 1px),
+      transparent calc(50% + 20.5rem + 1px)),
+    repeating-linear-gradient(to bottom,
+      rgba(22, 225, 106, 0.09) 0 1px,
+      transparent 1px 8px);
+}
+
+/* ============================================================
+   Print — printing is daylight. A clean paper résumé, no theatre.
+   ============================================================ */
+@media print {
+  :root, :root[data-theme="light"], :root[data-theme="dark"] {
+    --bg: #ffffff; --ink: #111; --soft: #222; --muted: #666;
+    --line: #ddd; --faint: #bbb;
+  }
+  #intro, .lamp, .scroll-cue, .skip, .defcard { display: none !important; }
+  body { background: #fff; }
+  .hero { min-height: auto; padding: 1.2rem 0 0.5rem; }
+  .wordmark-wrap::before { content: none; }
+  .wordmark, :root[data-theme="light"] .wordmark { text-shadow: none; }
+  .wordmark .dotmk { color: #111; }
+  .role { color: #444; }
+  a { color: #111; text-decoration-color: #bbb; }
+  #work .links a[href^="http"]::after,
+  footer .contact a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #666;
+    word-break: break-all;
+  }
+  .note { position: static; display: inline; width: auto; margin: 0; font-size: inherit; color: #444; }
+  .note::before { content: ""; }
+  .entry { break-inside: avoid; }
+  footer { margin-top: 2rem; padding-bottom: 1rem; }
+}
 
 /* ============================================================
    Reduced motion — no intro, no flicker, page is just there

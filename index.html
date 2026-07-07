@@ -92,7 +92,13 @@
           <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
         </svg>
       </button>
-      <h1 class="wordmark"><span class="w-champ">CHAMP</span><span class="dotmk">.MK</span></h1>
+      <h1 class="wordmark"><span class="w-champ" tabindex="0" role="button" aria-expanded="false" aria-controls="champ-def" title="champ, n.m.">CHAMP</span><span class="dotmk">.MK</span></h1>
+      <span class="defcard" id="champ-def" hidden>
+        <span class="def-word" lang="fr">champ</span> <span class="def-ipa">/&#643;&#593;&#771;/</span> <span class="def-pos">n.m.</span> &mdash; French: <b>field</b>.<br>
+        <i lang="fr">champ de vision</i> &mdash; field of view.<br>
+        <i lang="fr">profondeur de champ</i> &mdash; depth of field.<br>
+        <span class="def-note">Champ-Pacifique &mdash; &ldquo;peaceful field.&rdquo;</span>
+      </span>
     </div>
     <p class="role">Engineer</p>
     <p class="tag">Contributing to progress one commit at a time.</p>
@@ -104,10 +110,11 @@
   <!-- ===== ABOUT ===== -->
   <section id="about" class="about" tabindex="-1">
     <p class="lede">
-      Hi, my name is Champ-Pacifique Mukiza. I&rsquo;m here to, hopefully, help
-      humanity make some of the major strides that will revolutionize the world
-      and the way we live in it. Building is just one way I choose to do that,
-      and honestly, I just love to build.
+      Hi, my name is Champ-Pacifique Mukiza &mdash; in French, &ldquo;peaceful
+      field.&rdquo; I&rsquo;m here to help humanity make some of the major
+      strides that will revolutionize the world and the way we live in it.
+      Building is just one way I choose to do that, and honestly, I just love
+      to build.
     </p>
     <p class="contact">
       <a href="mailto:champpacifiquemukiza@gmail.com">Email</a>
@@ -120,7 +127,7 @@
 
   <!-- ===== SELECTED WORK ===== -->
   <section id="work" aria-labelledby="work-h">
-    <h2 id="work-h" class="label">Selected work</h2>
+    <h2 id="work-h" class="label"><span lang="fr">Champ de vision</span> &mdash; selected work</h2>
 
     <article class="entry">
       <h3>Amazon Leo</h3>
@@ -171,8 +178,9 @@
       <p>
         I built a multi-agent RAG pipeline that automated a slow, manual
         legal-documentation process, running on AWS Lambda, Llama&nbsp;3, and
-        Flask. The first working version cost twelve dollars of cloud to run. I
-        was seventeen.
+        Flask. I was seventeen.
+        <span class="note">The first working version cost twelve dollars of
+        cloud to run.</span>
       </p>
     </article>
 

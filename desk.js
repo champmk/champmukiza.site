@@ -28,3 +28,40 @@
   window.setInterval(update, 30000);
   document.addEventListener("champ:theme", update);
 })();
+
+/* champ, n.m. — hover the name for the dictionary entry; click to pin it. */
+(function () {
+  "use strict";
+
+  var word = document.querySelector(".w-champ");
+  var card = document.getElementById("champ-def");
+  if (!word || !card) return;
+
+  var pinned = false;
+
+  function show() { card.hidden = false; word.setAttribute("aria-expanded", "true"); }
+  function hide() { card.hidden = true; word.setAttribute("aria-expanded", "false"); }
+
+  word.addEventListener("mouseenter", function () { if (!pinned) show(); });
+  word.addEventListener("mouseleave", function () { if (!pinned) hide(); });
+  word.addEventListener("click", function (e) {
+    e.stopPropagation();
+    pinned = !pinned;
+    if (pinned) show(); else hide();
+  });
+  word.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); word.click(); }
+  });
+  document.addEventListener("click", function () { if (pinned) { pinned = false; hide(); } });
+})();
+
+/* Press "g": the baseline grid, for the designers who check. */
+(function () {
+  "use strict";
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "g" || e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+    document.body.classList.toggle("grid");
+  });
+})();
