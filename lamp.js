@@ -1,9 +1,8 @@
 /* The lamp is the theme switch — and a real object.
-   Pull the chain (or click the base): the bulb flickers, then it's night or day.
+   Click it: the bulb flickers, then it's night or day.
    Grab the shade: the head aims and the pool on the letters follows.
    Grab an arm: the joint folds; the springs go with it.
-   Toggle it like a maniac: the bulb burns out; screw in a new one.
-   The chain hangs plumb. Gravity doesn't care where you pointed it. */
+   Toggle it like a maniac: the bulb burns out; screw in a new one. */
 (function () {
   "use strict";
 
@@ -17,7 +16,6 @@
   var lower = lamp.querySelector(".l-lower");
   var upper = lamp.querySelector(".l-upper");
   var head = lamp.querySelector(".l-head");
-  var chain = lamp.querySelector(".l-chain");
   var socket = lamp.querySelector(".l-socket");
   var hitLower = lamp.querySelector(".l-hit-lower");
   var hitUpper = lamp.querySelector(".l-hit-upper");
@@ -49,26 +47,10 @@
     var m = el.getScreenCTM();
     return m ? pt.matrixTransform(m) : { x: 0, y: 0 };
   }
-  function localToSvg(el, x, y) {
-    var pt = svg.createSVGPoint();
-    pt.x = x; pt.y = y;
-    var m = el.getCTM();
-    return m ? pt.matrixTransform(m) : { x: x, y: y };
-  }
-  function scaleOf(el) {
-    var m = el.getScreenCTM();
-    return m ? Math.hypot(m.a, m.b) : 1;
-  }
-
-  /* Rim of the shade, in SVG space. The chain is a root group so +y is always down. */
-  var CHAIN_RIM = { x: 118.4, y: 100.2 };
-
-  function applyPose(chainDy) {
+  function applyPose() {
     lower.setAttribute("transform", "rotate(" + pose.lower + " 60 143)");
     upper.setAttribute("transform", "rotate(" + pose.upper + " 80 96)");
     head.setAttribute("transform", "rotate(" + pose.head + " 104 72)");
-    var rim = localToSvg(head, CHAIN_RIM.x, CHAIN_RIM.y);
-    chain.setAttribute("transform", "translate(" + rim.x + " " + rim.y + ") translate(0 " + (chainDy || 0) + ")");
     syncPool();
   }
 
@@ -114,10 +96,6 @@
       o.stop(t + dur + 0.01);
     } catch (e) {}
   }
-  function tick() {
-    blip(1900, 0.025, 0.055);
-    window.setTimeout(function () { blip(1350, 0.04, 0.07); }, 38);
-  }
   function pop() {
     blip(240, 0.11, 0.13);
     blip(70, 0.16, 0.07, "sine");
@@ -149,7 +127,7 @@
     burnt = false;
     recent = [];
     lamp.classList.remove("burnt");
-    lamp.title = "Pull the chain to switch. Grab the shade to aim. Grab an arm to pose it.";
+    lamp.title = "Click to switch. Grab the shade to aim. Grab an arm to pose it.";
     applyTheme(false);
 
     function seated() {
@@ -193,7 +171,7 @@
     window.setTimeout(function () { lamp.classList.remove("flicker"); busy = false; }, 640);
   }
 
-  /* Click the shade and it nods — that's not the switch. The chain is. */
+  /* Click the shade and it nods — grab it to aim; click the base to switch. */
   var nudging = false;
   function nudge() {
     if (reduce || nudging || aim || arm) return;
@@ -222,39 +200,13 @@
       if (cls) replaceBulb();
       return;
     }
-    if (t && t.closest && t.closest(".l-head") && !t.closest(".l-chain")) {
+    if (t && t.closest && t.closest(".l-head")) {
       nudge();
       return;
     }
     if (t && t.closest && t.closest(".l-hit")) return;
     toggle();
   });
-
-  /* ---------- pull the chain ---------- */
-  var chainDrag = null;
-  chain.addEventListener("pointerdown", function (e) {
-    if (burnt) return;
-    e.preventDefault();
-    e.stopPropagation();
-    chain.setPointerCapture(e.pointerId);
-    chainDrag = { y0: e.clientY, dy: 0 };
-  });
-  chain.addEventListener("pointermove", function (e) {
-    if (!chainDrag) return;
-    var s = scaleOf(svg);
-    chainDrag.dy = Math.max(0, Math.min(9, (e.clientY - chainDrag.y0) / s));
-    if (chainDrag.dy > 1.5) dragged = true;
-    applyPose(chainDrag.dy);
-  });
-  function chainRelease() {
-    if (!chainDrag) return;
-    var pulled = chainDrag.dy > 5;
-    chainDrag = null;
-    applyPose(0);
-    if (pulled) { tick(); toggle(); }
-  }
-  chain.addEventListener("pointerup", chainRelease);
-  chain.addEventListener("pointercancel", chainRelease);
 
   /* ---------- aim the head / fold an arm ---------- */
   var aim = null;
@@ -265,7 +217,7 @@
   }
 
   head.addEventListener("pointerdown", function (e) {
-    if (chainDrag || e.target.closest(".l-chain")) return;
+    if (e.target.closest && e.target.closest(".l-hit")) return;
     e.preventDefault();
     head.setPointerCapture(e.pointerId);
     lamp.classList.add("aiming");
@@ -290,7 +242,7 @@
 
   function bindArm(hit, key, originEl, ox, oy) {
     hit.addEventListener("pointerdown", function (e) {
-      if (chainDrag || aim) return;
+      if (aim) return;
       e.preventDefault();
       e.stopPropagation();
       hit.setPointerCapture(e.pointerId);

@@ -168,7 +168,7 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 
 .lamp {
   font-size: var(--wm);         /* 1em now == the wordmark's font-size */
-  --seat: 0.04em;               /* hairline onto the cap-tops; the foot is flush with the viewBox */
+  --seat: 0.10em;               /* font-relative: base rests on the cap-top line */
   position: absolute;
   left: 9%;
   bottom: 100%;
@@ -207,7 +207,7 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
               opacity: 0.95; pointer-events: none; }
 .l-spec   { fill: #fff8e6; opacity: 0.75; }
 .l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s var(--champ-ease); pointer-events: none; }
-.l-ball   { fill: currentColor; opacity: 0.78; }
+
 
 :root[data-theme="light"] .l-mouth { fill: #3b372f; }
 :root[data-theme="light"] .l-bulb  { fill: #8b857c; filter: none; }
@@ -228,10 +228,6 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 body.intro-active .l-beam { opacity: 0; }
 body.intro-active.intro-lit .l-beam { opacity: 0.9; }
 .lamp.flicker .l-beam { animation: lampFlick 0.6s linear; }
-
-/* Ball-chain pull switch. JS keeps it hanging straight down, gravity first. */
-.l-chain { cursor: grab; }
-.l-handle { fill: currentColor; opacity: 0.88; }
 
 /* Burnout: the filament is gone. No glow, no beam, cracked glass —
    and the room stays dark until a new bulb is screwed in. */
@@ -405,11 +401,24 @@ footer {
   margin: 0 0 1rem;
 }
 
-#work {
+#experience {
   margin-top: 3.4rem;
   padding-top: 2.4rem;
   border-top: 1px solid var(--line);
 }
+#made {
+  margin-top: 3.2rem;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--line);
+}
+.entry ul {
+  margin: 0.15rem 0 0;
+  padding-left: 1.15rem;
+}
+.entry li {
+  margin: 0 0 0.45rem;
+}
+.entry li:last-child { margin-bottom: 0; }
 
 .entry { margin: 0 0 2.7rem; position: relative; }
 .entry:last-child { margin-bottom: 0; }
@@ -647,7 +656,8 @@ body.grid::after {
   .wordmark .dotmk { color: #111; }
   .role { color: #444; }
   a { color: #111; text-decoration-color: #bbb; }
-  #work .links a[href^="http"]::after,
+  #experience .links a[href^="http"]::after,
+  #made .links a[href^="http"]::after,
   footer .contact a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 0.85em;

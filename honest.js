@@ -1,7 +1,7 @@
 /* The honesty layer.
    Real numbers or no numbers: the footer names the exact commit this page
-   is, and ModForge shows its real npm downloads. If an API is down, the
-   line simply doesn't appear — nothing here is ever made up. */
+   is. If an API is down, the line simply doesn't appear — nothing here
+   is ever made up. */
 (function () {
   "use strict";
   if (!window.fetch) return;
@@ -17,19 +17,6 @@
         var msg = (c.commit.message || "").split("\n")[0];
         commit.textContent = "This page is commit " + c.sha.slice(0, 7) + " — “" + msg + "”";
         commit.hidden = false;
-      })
-      .catch(function () {});
-  }
-
-  /* ModForge's real download count */
-  var dl = document.getElementById("modforge-dl");
-  if (dl) {
-    fetch("https://api.npmjs.org/downloads/point/last-month/modforge")
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-      .then(function (d) {
-        if (typeof d.downloads === "number" && d.downloads > 0) {
-          dl.textContent = " · " + d.downloads.toLocaleString("en-US") + " downloads last month";
-        }
       })
       .catch(function () {});
   }

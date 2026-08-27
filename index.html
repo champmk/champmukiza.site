@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://champmukiza.site">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 <noscript><style>#intro{display:none}</style></noscript>
 </head>
 <body>
@@ -37,8 +37,8 @@
   <!-- ===== HOME / HERO ===== -->
   <section id="home" class="hero">
     <div class="wordmark-wrap">
-      <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Pull the chain to switch. Grab the shade to aim. Grab an arm to pose it.">
-        <svg viewBox="0 0 150 158" aria-hidden="true" focusable="false">
+      <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Click to switch. Grab the shade to aim. Grab an arm to pose it.">
+        <svg viewBox="0 0 150 160" aria-hidden="true" focusable="false">
           <defs>
             <filter id="lglow" x="-160%" y="-160%" width="420%" height="420%">
               <feGaussianBlur stdDeviation="6"/>
@@ -103,16 +103,6 @@
               <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
             </g>
           </g>
-          <!-- chain lives in SVG space, not the shade: gravity hangs it plumb from the rim -->
-          <g class="l-chain">
-            <circle class="l-ball" cx="0" cy="2.4" r="0.72"/>
-            <circle class="l-ball" cx="0" cy="4.8" r="0.72"/>
-            <circle class="l-ball" cx="0" cy="7.2" r="0.72"/>
-            <circle class="l-ball" cx="0" cy="9.6" r="0.72"/>
-            <circle class="l-ball" cx="0" cy="12.0" r="0.72"/>
-            <circle class="l-ball" cx="0" cy="14.4" r="0.72"/>
-            <circle class="l-handle" cx="0" cy="17.6" r="1.85"/>
-          </g>
         </svg>
       </button>
       <h1 class="wordmark"><span class="w-champ" tabindex="0" role="button" aria-expanded="false" aria-controls="champ-def" title="champ, n.m.">CHAMP</span><span class="dotmk">.MK</span></h1>
@@ -148,9 +138,9 @@
     </p>
   </section>
 
-  <!-- ===== SELECTED WORK ===== -->
-  <section id="work" aria-labelledby="work-h">
-    <h2 id="work-h" class="label"><span lang="fr">Champ de vision</span> &mdash; selected work</h2>
+  <!-- ===== EXPERIENCE ===== -->
+  <section id="experience" aria-labelledby="exp-h">
+    <h2 id="exp-h" class="label">Experience</h2>
 
     <article class="entry">
       <!-- each project keeps one hand-drawn object in the margin,
@@ -163,14 +153,55 @@
         <path d="M8 40 q16 8 32 0" pathLength="100"/>
       </svg>
       <h3>Amazon Leo</h3>
-      <p class="meta">SDE intern &middot; Bellevue, WA &middot; 2026 &ndash; present</p>
+      <p class="meta">SDE intern &middot; Bellevue, WA &middot; May &ndash; Aug 2026</p>
       <p>
-        I&rsquo;m building software for my team here, developing tools that
-        contribute directly to our goal of bringing internet access to every
-        corner of Earth. Leo is Amazon&rsquo;s low-Earth-orbit satellite broadband
-        constellation.
+        Leo is Amazon&rsquo;s low-Earth-orbit satellite broadband constellation.
+        I spent the summer building the analytics that plans it.
+      </p>
+      <ul>
+        <li>Architected and deployed a 0-to-1 serverless AWS analytics system to evaluate multi-year supply, demand, and utilization plans for Amazon Leo&rsquo;s 3,000+ satellite constellation, replacing and automating a manual multi-stage process.</li>
+        <li>Engineered the data pipeline to execute schema normalization, geographic enrichment, delta calculations, and rollup reconciliation.</li>
+        <li>Provisioned scalable infrastructure using TypeScript AWS CDK, integrating a Python engine and AWS Lambda along with S3, Glue, Athena, AppConfig, CloudWatch, and QuickSight.</li>
+        <li>Ensured operational and data integrity by authoring 210 automated tests and validating strict SQLite-to-Athena parity safeguards.</li>
+      </ul>
+    </article>
+
+    <article class="entry">
+      <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <rect x="10" y="8" width="22" height="28" rx="2" pathLength="100"/>
+        <path d="M15 16 h12 m-12 5 h12 m-12 5 h8" pathLength="100"/>
+        <path d="M36 14 v22 a4 4 0 0 1 -4 4 H16" pathLength="100"/>
+      </svg>
+      <h3>Principal Financial Group</h3>
+      <p class="meta">Contract AI engineer &middot; 2024</p>
+      <p>
+        I built a multi-agent RAG pipeline that automated a slow, manual
+        legal-documentation process, running on AWS Lambda, Llama&nbsp;3, and
+        Flask. I was seventeen.
+        <span class="note">The first working version cost twelve dollars of
+        cloud to run.</span>
       </p>
     </article>
+
+    <article class="entry">
+      <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <path d="M4 24 h11 m-4 -4 l4 4 l-4 4" pathLength="100"/>
+        <circle cx="31" cy="24" r="11" pathLength="100"/>
+        <circle cx="31" cy="24" r="4.5" pathLength="100"/>
+      </svg>
+      <h3>Iowa State University, Physics Dept.</h3>
+      <p class="meta">Software &amp; technical intern &middot; 2024</p>
+      <p>
+        I worked on ANNIE, a neutrino detection experiment at Fermilab, writing
+        simulations and building experiments. When documentation for a broken
+        coincidence machine could not be found, I built a custom one.
+      </p>
+    </article>
+  </section>
+
+  <!-- ===== PROJECTS AND RECOGNITION ===== -->
+  <section id="made" aria-labelledby="made-h">
+    <h2 id="made-h" class="label">Projects and recognition</h2>
 
     <article class="entry">
       <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
@@ -178,14 +209,13 @@
         <path d="M36 11 l3 -3 m1 7 l4 -1 m-10 -7 l1 -4" pathLength="100"/>
       </svg>
       <h3>ModForge</h3>
-      <p class="meta">Solo project &middot; 2026 &middot; live on npm<span id="modforge-dl"></span></p>
+      <p class="meta">Solo project &middot; 2026 &middot; on npm</p>
       <p>
-        ModForge is a deterministic engine for migrating Minecraft mods between
-        game versions. I got tired of tools that guess, so I built one that
-        doesn&rsquo;t: it reads every class straight from the jar and checks each
-        mapping against the real target, then tells you exactly how sure it is,
-        grading each result EXACT, CANDIDATE, or UNRESOLVED. It&rsquo;s published on npm and
-        ships an MCP server, so AI agents can ask for verified mappings instead
+        ModForge is a deterministic engine for migrating Minecraft mods across
+        versions. It never guesses a rename: every result is joined through the
+        real mappings and checked against the actual game jar, then graded
+        EXACT, CANDIDATE, or UNRESOLVED. It&rsquo;s published on npm, and it
+        ships an MCP server so AI agents can ask for verified mappings instead
         of making them up.
       </p>
       <p class="links">
@@ -240,38 +270,6 @@
 
     <article class="entry">
       <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-        <rect x="10" y="8" width="22" height="28" rx="2" pathLength="100"/>
-        <path d="M15 16 h12 m-12 5 h12 m-12 5 h8" pathLength="100"/>
-        <path d="M36 14 v22 a4 4 0 0 1 -4 4 H16" pathLength="100"/>
-      </svg>
-      <h3>Principal Financial Group</h3>
-      <p class="meta">Contract AI engineer &middot; 2024</p>
-      <p>
-        I built a multi-agent RAG pipeline that automated a slow, manual
-        legal-documentation process, running on AWS Lambda, Llama&nbsp;3, and
-        Flask. I was seventeen.
-        <span class="note">The first working version cost twelve dollars of
-        cloud to run.</span>
-      </p>
-    </article>
-
-    <article class="entry">
-      <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-        <path d="M4 24 h11 m-4 -4 l4 4 l-4 4" pathLength="100"/>
-        <circle cx="31" cy="24" r="11" pathLength="100"/>
-        <circle cx="31" cy="24" r="4.5" pathLength="100"/>
-      </svg>
-      <h3>ANNIE &middot; Fermilab</h3>
-      <p class="meta">Software &amp; technical intern, Iowa State &middot; 2024</p>
-      <p>
-        I worked on ANNIE, a neutrino detection experiment at Fermilab, writing
-        simulations and building experiments. When documentation for a broken
-        coincidence machine could not be found, I built a custom one.
-      </p>
-    </article>
-
-    <article class="entry">
-      <svg class="obj" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
         <path d="M19 8 h10 l3 9 h-16 z" pathLength="100"/>
         <rect x="15" y="17" width="18" height="9" rx="2" pathLength="100"/>
         <path d="M18 26 l-6 9 m24 -9 l6 9 m-28 0 h5 m18 0 h5" pathLength="100"/>
@@ -307,8 +305,8 @@
 </main>
 
 <script src="intro.js?v=2" defer></script>
-<script src="lamp.js?v=3" defer></script>
+<script src="lamp.js?v=4" defer></script>
 <script src="desk.js" defer></script>
-<script src="honest.js" defer></script>
+<script src="honest.js?v=2" defer></script>
 </body>
 </html>
