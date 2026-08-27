@@ -469,7 +469,7 @@ footer .contact { margin-bottom: 0.8rem; }
 #commit-line { margin-bottom: 0.5rem; }
 
 /* ============================================================
-   SUBPAGES — log, colophon, 404
+   SUBPAGES — colophon, 404
    ============================================================ */
 .page { padding-top: clamp(3.5rem, 10vw, 6.5rem); }
 .page-home {
@@ -574,8 +574,6 @@ main > section.page.viz { max-width: 64rem; }
   .viz-tabs button,
   .viz-nav button { transition: none; }
 }
-.logentry { margin: 0 0 2.8rem; }
-.logentry h2 { margin-top: 0.15rem; }
 code { font-family: var(--mono); font-size: 0.92em; color: var(--muted); }
 .grade {
   font-family: var(--mono);

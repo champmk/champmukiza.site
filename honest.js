@@ -47,7 +47,7 @@
     console.log(
       "%c" + lamp + "\n\n%cThe light is real.%c\n" +
       "No build step, no framework — View Source is the actual site.\n" +
-      "Design decisions, one commit at a time → https://champmukiza.site/log.html",
+      "How it’s made → https://champmukiza.site/colophon.html",
       "color:#16e16a;font-family:monospace",
       "color:#ffcf5a;font-weight:bold;font-size:14px",
       "color:inherit"
