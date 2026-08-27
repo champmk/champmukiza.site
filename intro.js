@@ -33,10 +33,10 @@
   var finished = false;
 
   function bulbPoint() {
-    // The bulb sits at (104,106) in the lamp's 150x160 viewBox.
-    if (!lamp) return { x: innerWidth / 2, y: innerHeight * 0.42 };
-    var r = lamp.getBoundingClientRect();
-    return { x: r.left + r.width * (104 / 150), y: r.top + r.height * (106 / 160) };
+    var glow = lamp && lamp.querySelector(".l-glow");
+    if (!glow) return { x: innerWidth / 2, y: innerHeight * 0.42 };
+    var r = glow.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
 
   function setPool(px) { intro.style.setProperty("--r", px + "px"); }

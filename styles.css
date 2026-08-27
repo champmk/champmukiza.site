@@ -188,46 +188,49 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 
 /* Night (default): it's dark, so the lamp is ON. Day: sunlight fills
    the room, so the lamp is off and merely casts a soft paper shadow. */
-.l-arm    { fill: none; stroke: currentColor; stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; }
-.l-spring { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+.l-arm    { fill: none; stroke: currentColor; stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.l-spring { fill: none; stroke: currentColor; stroke-width: 1.15; stroke-linecap: round; stroke-linejoin: round; opacity: 0.62; pointer-events: none; }
+.l-hit    { fill: none; stroke: transparent; stroke-width: 14; stroke-linecap: round; pointer-events: stroke; cursor: grab; }
 .l-solid  { fill: currentColor; }
-.l-shade  { fill: currentColor; }
-.l-mouth  { fill: #ffe49b; }                                                /* warm-lit cavity while ON */
-.l-base   { fill: currentColor; }                                          /* screw base mounting the bulb into the shade */
+.l-shade  { fill: url(#shadeMetal); }
+.l-shine  { fill: none; stroke: #fff8e6; stroke-width: 1.15; stroke-linecap: round; opacity: 0.28; pointer-events: none; }
+.l-washer { fill: none; stroke: currentColor; stroke-width: 1.15; opacity: 0.32; pointer-events: none; }
+.l-mouth  { fill: #ffe49b; }
+.l-base   { fill: currentColor; }
+.l-thread { fill: none; stroke: var(--bg); stroke-width: 0.55; stroke-linecap: round; opacity: 0.55; pointer-events: none; }
 .l-joint  { fill: currentColor; }
 .l-bolt   { fill: var(--bg); }
-.l-bulb   { fill: #ffd35a; filter: drop-shadow(0 0 5px rgba(255,196,70,0.9));
-            transition: fill 0.3s var(--champ-ease), filter 0.3s var(--champ-ease); }
-.l-spec   { fill: #fff8e6; opacity: 0.75; }                                 /* hot spot on the lit glass */
-.l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s var(--champ-ease); }
+.l-bulb   { fill: url(#bulbOn); filter: drop-shadow(0 0 5px rgba(255,196,70,0.9));
+            transition: fill 0.35s var(--champ-ease), filter 0.35s var(--champ-ease); }
+.l-filament { fill: none; stroke: #ff9a1a; stroke-width: 0.7; stroke-linecap: round; stroke-linejoin: round;
+              opacity: 0.95; pointer-events: none; }
+.l-spec   { fill: #fff8e6; opacity: 0.75; }
+.l-glow   { fill: #ffcf5a; opacity: 0.95; transition: opacity 0.35s var(--champ-ease); pointer-events: none; }
+.l-ball   { fill: currentColor; opacity: 0.78; }
 
-:root[data-theme="light"] .l-mouth { fill: #3b372f; }                       /* shadowed interior of the unlit shade */
-:root[data-theme="light"] .l-bulb  { fill: #8b857c; filter: none; }         /* dim, desaturated glass when off */
+:root[data-theme="light"] .l-mouth { fill: #3b372f; }
+:root[data-theme="light"] .l-bulb  { fill: #8b857c; filter: none; }
 :root[data-theme="light"] .l-spec  { fill: currentColor; opacity: 0.3; }
 :root[data-theme="light"] .l-glow  { opacity: 0; }
+:root[data-theme="light"] .l-filament { opacity: 0; }
+:root[data-theme="light"] .l-shine { opacity: 0.08; }
 :root[data-theme="light"] .lamp svg { filter: drop-shadow(0.028em 0.05em 0.04em rgba(27, 26, 23, 0.18)); }
 
-/* ---- Aimable head: grab the shade and point the light ---- */
-.l-head {
-  transform-box: view-box;              /* user-unit transforms */
-  transform-origin: 104px 72px;         /* the head pivot */
-  cursor: grab;
-}
-.lamp.aiming .l-head { cursor: grabbing; }
+/* ---- Poseable joints: shade aims, arms fold, chain hangs plumb ---- */
+.l-head { cursor: grab; }
+.lamp.aiming .l-head,
+.lamp.posing .l-hit { cursor: grabbing; }
 
 /* The visible cone of light. Real at night, gone by day. */
-.l-beam { fill: url(#beamGrad); opacity: 0.75; transition: opacity 0.35s var(--champ-ease); pointer-events: none; }
+.l-beam { fill: url(#beamGrad); opacity: 0.8; transition: opacity 0.35s var(--champ-ease); pointer-events: none; }
 :root[data-theme="light"] .l-beam { opacity: 0; }
 body.intro-active .l-beam { opacity: 0; }
 body.intro-active.intro-lit .l-beam { opacity: 0.9; }
 .lamp.flicker .l-beam { animation: lampFlick 0.6s linear; }
 
-/* Ball-chain pull switch — quiet hardware, not a feature.
-   Hangs plumb from the shade rim (JS counter-rotates it when the head
-   is aimed, because gravity doesn't care where the lamp points). */
-.l-chain { transform-box: view-box; transform-origin: 117.6px 99.5px; cursor: grab; }
-.l-chainline { fill: none; stroke: currentColor; stroke-width: 1.1; stroke-dasharray: 1.5 1.4; stroke-linecap: round; opacity: 0.75; }
-.l-handle { fill: currentColor; opacity: 0.85; }
+/* Ball-chain pull switch. JS keeps it hanging straight down, gravity first. */
+.l-chain { cursor: grab; }
+.l-handle { fill: currentColor; opacity: 0.88; }
 
 /* Burnout: the filament is gone. No glow, no beam, cracked glass —
    and the room stays dark until a new bulb is screwed in. */
@@ -237,12 +240,17 @@ body.intro-active.intro-lit .l-beam { opacity: 0.9; }
 .lamp.burnt .l-bulb  { fill: #4a463f !important; filter: none !important; cursor: pointer; }
 .lamp.burnt .l-mouth { fill: #2b2823 !important; }
 .lamp.burnt .l-spec  { opacity: 0.12 !important; }
+.lamp.burnt .l-filament { opacity: 0 !important; }
 .lamp.burnt .l-crack { display: block; }
+.lamp.burnt .l-socket { cursor: pointer; }
 
 /* The pool of lamplight on the wall behind the wordmark — night only.
-   The canvas is ~4x the wordmark and the gradient dies at ~70% of its
-   radius, so the light reaches zero long before any box edge: no seams,
-   just one dark wall with a warm patch where the lamp is. */
+   --pool-x / --pool-y are the beam's landing, in this overlay's space,
+   so the warm patch follows the shade when you pose the lamp. */
+.wordmark-wrap {
+  --pool-x: 43%;
+  --pool-y: 31%;
+}
 .wordmark-wrap::before {
   content: "";
   position: absolute;
@@ -253,18 +261,20 @@ body.intro-active.intro-lit .l-beam { opacity: 0.9; }
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(
-    ellipse 16% 12% at 43% 31%,
-    rgba(255, 205, 92, 0.12),
-    rgba(255, 205, 92, 0.04) 46%,
+    ellipse 16% 12% at var(--pool-x) var(--pool-y),
+    rgba(255, 205, 92, 0.14),
+    rgba(255, 205, 92, 0.05) 46%,
     rgba(255, 205, 92, 0) 72%
   );
 }
-:root[data-theme="light"] .wordmark-wrap::before { content: none; }
+:root[data-theme="light"] .wordmark-wrap::before,
+.wordmark-wrap:has(.lamp.burnt)::before { content: none; }
 :root[data-theme="light"] .wordmark { text-shadow: 0.012em 0.028em 0.05em rgba(27, 26, 23, 0.10); }
 
 /* flicker on click — the light stutters before settling into the new state */
 .lamp.flicker .l-glow { animation: lampFlick 0.6s linear; }
 .lamp.flicker .l-bulb { animation: bulbFlick 0.6s linear; }
+.lamp.flicker .l-filament { animation: lampFlick 0.6s linear; }
 @keyframes lampFlick {
   0%{opacity:1} 8%{opacity:.12} 17%{opacity:.9} 27%{opacity:.08}
   39%{opacity:1} 52%{opacity:.3} 66%{opacity:1} 80%{opacity:.5} 100%{opacity:1}

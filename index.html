@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://champmukiza.site">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=11">
 <noscript><style>#intro{display:none}</style></noscript>
 </head>
 <body>
@@ -37,62 +37,79 @@
   <!-- ===== HOME / HERO ===== -->
   <section id="home" class="hero">
     <div class="wordmark-wrap">
-      <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Click the lamp — or pull the chain. The head aims, too.">
+      <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Pull the chain to switch. Grab the shade to aim. Grab an arm to pose it.">
         <svg viewBox="0 0 150 160" aria-hidden="true" focusable="false">
           <defs>
             <filter id="lglow" x="-160%" y="-160%" width="420%" height="420%">
               <feGaussianBlur stdDeviation="6"/>
             </filter>
             <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#ffcf5a" stop-opacity="0.20"/>
+              <stop offset="0" stop-color="#ffcf5a" stop-opacity="0.28"/>
+              <stop offset="0.35" stop-color="#ffcf5a" stop-opacity="0.10"/>
               <stop offset="1" stop-color="#ffcf5a" stop-opacity="0"/>
             </linearGradient>
+            <linearGradient id="shadeMetal" gradientUnits="userSpaceOnUse" x1="90" y1="72" x2="118" y2="100">
+              <stop offset="0" stop-color="currentColor" stop-opacity="0.58"/>
+              <stop offset="0.28" stop-color="currentColor" stop-opacity="1"/>
+              <stop offset="0.5" stop-color="currentColor" stop-opacity="0.72"/>
+              <stop offset="1" stop-color="currentColor" stop-opacity="1"/>
+            </linearGradient>
+            <radialGradient id="bulbOn" cx="38%" cy="32%" r="72%">
+              <stop offset="0" stop-color="#fff6d0"/>
+              <stop offset="0.42" stop-color="#ffd35a"/>
+              <stop offset="1" stop-color="#e09218"/>
+            </radialGradient>
           </defs>
           <!-- weighted base: flat bottom resting on the letters -->
           <path class="l-solid" d="M41 158 Q38.5 158 39.5 155.6 L45 150.4 Q46.2 149 49 149 L71 149 Q73.8 149 75 150.4 L80.5 155.6 Q81.5 158 79 158 Z"/>
-          <!-- base column / hub -->
           <rect class="l-solid" x="52" y="143.5" width="16" height="6.5" rx="2.4"/>
-          <!-- base pivot -->
+          <circle class="l-washer" cx="60" cy="143" r="7.1"/>
           <circle class="l-joint" cx="60" cy="143" r="5.6"/>
           <circle class="l-bolt"  cx="60" cy="143" r="1.9"/>
-          <!-- lower arm + parallel tension rod -->
-          <path class="l-arm"    d="M60 143 L80 96"/>
-          <path class="l-spring" d="M64 142 L84 95"/>
-          <!-- elbow -->
-          <circle class="l-joint" cx="80" cy="96" r="5.4"/>
-          <circle class="l-bolt"  cx="80" cy="96" r="1.8"/>
-          <!-- upper arm + parallel tension rod -->
-          <path class="l-arm"    d="M80 96 L104 72"/>
-          <path class="l-spring" d="M82.5 99 L106.5 75"/>
-          <!-- HEAD — everything below rotates around the head pivot (aimable) -->
-          <g class="l-head">
-            <!-- the cone of light itself; extends past the SVG onto the letters -->
-            <path class="l-beam" d="M92 100 L116 100 L152 218 L56 218 Z"/>
-            <!-- conical bell shade, opening straight DOWN onto the letters -->
-            <path class="l-shade" d="M97 71 Q104 68 111 72 L118 99 Q104 104 90 99 Z"/>
-            <!-- finial cap on top of the shade -->
-            <circle class="l-solid" cx="104" cy="68.5" r="2"/>
-            <!-- dark interior of the shade opening (so the bulb reads as seated INSIDE) -->
-            <ellipse class="l-mouth" cx="104" cy="99.5" rx="13" ry="4"/>
-            <!-- warm halo, centred on the bulb -->
-            <circle class="l-glow" cx="104" cy="105" r="13" filter="url(#lglow)"/>
-            <!-- screw base: mounts the bulb up into the shade socket -->
-            <path class="l-base" d="M100.8 97.8 h6.4 l-0.8 3.4 h-4.8 z"/>
-            <!-- glass bulb (pear shape), seated in the shade opening -->
-            <path class="l-bulb" d="M102 101 q-3 2.2 -3 5 a5.4 5.4 0 1 0 10.8 0 q0 -2.8 -3 -5 z"/>
-            <circle class="l-spec" cx="101.9" cy="103.8" r="1.6"/>
-            <!-- hairline crack, shown only when the bulb burns out -->
-            <path class="l-crack" d="M100.5 105.5 l2.6 1.7 l-2 1.9 l2.8 1.5"/>
-            <!-- ball-chain pull switch, hanging off the shade rim,
-                 outside the beam; it obeys gravity, not the head -->
-            <g class="l-chain">
-              <path class="l-chainline" d="M117.6 99.5 L117.6 109.5"/>
-              <circle class="l-handle" cx="117.6" cy="111.4" r="1.7"/>
+
+          <!-- lower arm, nested: poseable around the base pivot -->
+          <g class="l-lower">
+            <path class="l-hit l-hit-lower" d="M60 143 L80 96"/>
+            <path class="l-arm" d="M60 143 L80 96"/>
+            <path class="l-spring" d="M64.0 142.0 L66.8 139.7 L64.9 135.5 L69.3 133.9 L67.4 129.6 L71.8 128.0 L69.9 123.7 L74.3 122.1 L72.4 117.8 L76.8 116.2 L74.9 112.0 L79.3 110.4 L77.4 106.1 L81.8 104.5 L79.9 100.2 L84.3 98.6 L84.0 95.0"/>
+            <circle class="l-washer" cx="80" cy="96" r="6.8"/>
+            <circle class="l-joint" cx="80" cy="96" r="5.4"/>
+            <circle class="l-bolt"  cx="80" cy="96" r="1.8"/>
+
+            <g class="l-upper">
+              <path class="l-hit l-hit-upper" d="M80 96 L104 72"/>
+              <path class="l-arm" d="M80 96 L104 72"/>
+              <path class="l-spring" d="M82.5 99.0 L85.6 98.1 L85.4 93.9 L89.6 94.1 L89.4 89.9 L93.6 90.1 L93.4 85.9 L97.6 86.1 L97.4 81.9 L101.6 82.1 L101.4 77.9 L105.6 78.1 L106.5 75.0"/>
+
+              <!-- HEAD — shade, bulb, beam. Pivot hardware stays on the arm. -->
+              <g class="l-head">
+                <path class="l-beam" d="M92 100 L116 100 L158 230 L50 230 Z"/>
+                <path class="l-shade" d="M97 71 Q104 68 111 72 L118 99 Q104 104 90 99 Z"/>
+                <path class="l-shine" d="M99 76 Q103 72 107 74"/>
+                <circle class="l-solid" cx="104" cy="68.5" r="2"/>
+                <ellipse class="l-mouth" cx="104" cy="99.5" rx="13" ry="4"/>
+                <circle class="l-glow" cx="104" cy="105" r="13" filter="url(#lglow)"/>
+                <g class="l-socket">
+                  <path class="l-base" d="M100.8 97.8 h6.4 l-0.8 3.4 h-4.8 z"/>
+                  <path class="l-thread" d="M101.2 99.2 h5.6 m-5.5 1.1 h5.4"/>
+                  <path class="l-bulb" d="M102 101 q-3 2.2 -3 5 a5.4 5.4 0 1 0 10.8 0 q0 -2.8 -3 -5 z"/>
+                  <path class="l-filament" d="M102.6 104.2 l1.1 1.6 l-1.6 1.6 l1.6 1.7 l-1.1 1.4"/>
+                  <circle class="l-spec" cx="101.9" cy="103.8" r="1.6"/>
+                  <path class="l-crack" d="M100.5 105.5 l2.6 1.7 l-2 1.9 l2.8 1.5"/>
+                </g>
+                <g class="l-chain">
+                  <circle class="l-ball" cx="117.6" cy="101.4" r="0.72"/>
+                  <circle class="l-ball" cx="117.6" cy="103.6" r="0.72"/>
+                  <circle class="l-ball" cx="117.6" cy="105.8" r="0.72"/>
+                  <circle class="l-ball" cx="117.6" cy="108.0" r="0.72"/>
+                  <circle class="l-handle" cx="117.6" cy="111.4" r="1.7"/>
+                </g>
+              </g>
+              <circle class="l-washer" cx="104" cy="72" r="6.6"/>
+              <circle class="l-joint" cx="104" cy="72" r="5.2"/>
+              <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
             </g>
           </g>
-          <!-- head pivot hardware stays fixed to the arm -->
-          <circle class="l-joint" cx="104" cy="72" r="5.2"/>
-          <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
         </svg>
       </button>
       <h1 class="wordmark"><span class="w-champ" tabindex="0" role="button" aria-expanded="false" aria-controls="champ-def" title="champ, n.m.">CHAMP</span><span class="dotmk">.MK</span></h1>
@@ -286,8 +303,8 @@
 
 </main>
 
-<script src="intro.js" defer></script>
-<script src="lamp.js" defer></script>
+<script src="intro.js?v=2" defer></script>
+<script src="lamp.js?v=2" defer></script>
 <script src="desk.js" defer></script>
 <script src="honest.js" defer></script>
 </body>
