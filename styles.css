@@ -168,7 +168,7 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
 
 .lamp {
   font-size: var(--wm);         /* 1em now == the wordmark's font-size */
-  --seat: 0.10em;               /* font-relative: base rests on the cap-top line */
+  --seat: 0.04em;               /* hairline onto the cap-tops; the foot is flush with the viewBox */
   position: absolute;
   left: 9%;
   bottom: 100%;
@@ -180,6 +180,7 @@ body.intro-active.intro-lit .l-glow { opacity: 0.95; }
   line-height: 0;
   transform: translateY(var(--seat));
   z-index: 4;
+  overflow: visible;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;   /* head-aiming and chain-pulling work on touch */
 }

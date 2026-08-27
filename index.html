@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://champmukiza.site">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="styles.css?v=12">
 <noscript><style>#intro{display:none}</style></noscript>
 </head>
 <body>
@@ -38,7 +38,7 @@
   <section id="home" class="hero">
     <div class="wordmark-wrap">
       <button class="lamp" type="button" aria-label="Toggle the light" aria-pressed="false" title="Pull the chain to switch. Grab the shade to aim. Grab an arm to pose it.">
-        <svg viewBox="0 0 150 160" aria-hidden="true" focusable="false">
+        <svg viewBox="0 0 150 158" aria-hidden="true" focusable="false">
           <defs>
             <filter id="lglow" x="-160%" y="-160%" width="420%" height="420%">
               <feGaussianBlur stdDeviation="6"/>
@@ -97,18 +97,21 @@
                   <circle class="l-spec" cx="101.9" cy="103.8" r="1.6"/>
                   <path class="l-crack" d="M100.5 105.5 l2.6 1.7 l-2 1.9 l2.8 1.5"/>
                 </g>
-                <g class="l-chain">
-                  <circle class="l-ball" cx="117.6" cy="101.4" r="0.72"/>
-                  <circle class="l-ball" cx="117.6" cy="103.6" r="0.72"/>
-                  <circle class="l-ball" cx="117.6" cy="105.8" r="0.72"/>
-                  <circle class="l-ball" cx="117.6" cy="108.0" r="0.72"/>
-                  <circle class="l-handle" cx="117.6" cy="111.4" r="1.7"/>
-                </g>
               </g>
               <circle class="l-washer" cx="104" cy="72" r="6.6"/>
               <circle class="l-joint" cx="104" cy="72" r="5.2"/>
               <circle class="l-bolt"  cx="104" cy="72" r="1.7"/>
             </g>
+          </g>
+          <!-- chain lives in SVG space, not the shade: gravity hangs it plumb from the rim -->
+          <g class="l-chain">
+            <circle class="l-ball" cx="0" cy="2.4" r="0.72"/>
+            <circle class="l-ball" cx="0" cy="4.8" r="0.72"/>
+            <circle class="l-ball" cx="0" cy="7.2" r="0.72"/>
+            <circle class="l-ball" cx="0" cy="9.6" r="0.72"/>
+            <circle class="l-ball" cx="0" cy="12.0" r="0.72"/>
+            <circle class="l-ball" cx="0" cy="14.4" r="0.72"/>
+            <circle class="l-handle" cx="0" cy="17.6" r="1.85"/>
           </g>
         </svg>
       </button>
@@ -304,7 +307,7 @@
 </main>
 
 <script src="intro.js?v=2" defer></script>
-<script src="lamp.js?v=2" defer></script>
+<script src="lamp.js?v=3" defer></script>
 <script src="desk.js" defer></script>
 <script src="honest.js" defer></script>
 </body>

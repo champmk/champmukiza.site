@@ -49,22 +49,26 @@
     var m = el.getScreenCTM();
     return m ? pt.matrixTransform(m) : { x: 0, y: 0 };
   }
+  function localToSvg(el, x, y) {
+    var pt = svg.createSVGPoint();
+    pt.x = x; pt.y = y;
+    var m = el.getCTM();
+    return m ? pt.matrixTransform(m) : { x: x, y: y };
+  }
   function scaleOf(el) {
     var m = el.getScreenCTM();
     return m ? Math.hypot(m.a, m.b) : 1;
   }
-  function worldHead() { return pose.lower + pose.upper + pose.head; }
 
-  function chainTransform(dy) {
-    var w = worldHead();
-    return "translate(117.6 99.5) translate(0 " + (dy || 0) + ") rotate(" + (-w) + ") translate(-117.6 -99.5)";
-  }
+  /* Rim of the shade, in SVG space. The chain is a root group so +y is always down. */
+  var CHAIN_RIM = { x: 118.4, y: 100.2 };
 
   function applyPose(chainDy) {
     lower.setAttribute("transform", "rotate(" + pose.lower + " 60 143)");
     upper.setAttribute("transform", "rotate(" + pose.upper + " 80 96)");
     head.setAttribute("transform", "rotate(" + pose.head + " 104 72)");
-    chain.setAttribute("transform", chainTransform(chainDy || 0));
+    var rim = localToSvg(head, CHAIN_RIM.x, CHAIN_RIM.y);
+    chain.setAttribute("transform", "translate(" + rim.x + " " + rim.y + ") translate(0 " + (chainDy || 0) + ")");
     syncPool();
   }
 
@@ -88,7 +92,7 @@
     wrap.style.setProperty("--pool-y", ((py - by) / bh * 100).toFixed(2) + "%");
   }
 
-  window.addEventListener("resize", syncPool);
+  window.addEventListener("resize", function () { applyPose(); });
   document.addEventListener("champ:theme", syncPool);
 
   /* ---------- tiny gesture sounds (only ever on explicit clicks) ---------- */
@@ -237,7 +241,7 @@
   });
   chain.addEventListener("pointermove", function (e) {
     if (!chainDrag) return;
-    var s = scaleOf(head);
+    var s = scaleOf(svg);
     chainDrag.dy = Math.max(0, Math.min(9, (e.clientY - chainDrag.y0) / s));
     if (chainDrag.dy > 1.5) dragged = true;
     applyPose(chainDrag.dy);
@@ -315,4 +319,5 @@
   bindArm(hitUpper, "upper", lower, 80, 96);
 
   applyPose();
+  requestAnimationFrame(function () { applyPose(); });
 })();
