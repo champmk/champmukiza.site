@@ -496,6 +496,84 @@ footer .contact { margin-bottom: 0.8rem; }
   color: var(--ink);
   margin: 2.4rem 0 0.6rem;
 }
+
+/* ---- fabric-te inspector. Wider than the reading column; still type, not a globe. ---- */
+main > section.page.viz { max-width: 64rem; }
+.viz .lede { max-width: 36rem; }
+.viz-tabs, .viz-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.7rem;
+  align-items: center;
+}
+.viz-tabs {
+  margin: 1.6rem 0 1.1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+.viz-nav {
+  margin: 1.1rem 0 0.4rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+.viz-tabs button,
+.viz-nav button {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 0.22rem 0.6rem;
+  cursor: pointer;
+}
+.viz-tabs button.on,
+.viz-nav button.on {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.viz-copy { display: none; }
+.viz-copy.on { display: block; }
+.viz-copy h2 { margin: 0 0 0.4rem; }
+.viz-copy p { margin: 0 0 0.4rem; max-width: 36rem; }
+#c-only { display: none; gap: 0.55rem; }
+#c-only.on { display: flex; }
+.viz-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.viz-step {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--soft);
+  min-height: 2.4em;
+  margin: 0 0 0.7rem;
+  max-width: 40rem;
+}
+.viz-stage {
+  margin: 0.4rem 0 0.8rem;
+  overflow-x: auto;
+}
+.viz-stage canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 1000px;
+}
+.viz-keys {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 1.6rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .viz-tabs button,
+  .viz-nav button { transition: none; }
+}
 .logentry { margin: 0 0 2.8rem; }
 .logentry h2 { margin-top: 0.15rem; }
 code { font-family: var(--mono); font-size: 0.92em; color: var(--muted); }

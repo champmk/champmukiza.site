@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<script>try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){var h=+new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',hourCycle:'h23'}).format(new Date());t=(h>=19||h<7)?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
+<title>The three examples — CHAMP.MK</title>
+<meta name="description" content="Three locked examples from fabric-te: the map, the ring stopwatch, and leftover-aware admit. This is not the simulator.">
+<link rel="canonical" href="https://champmukiza.site/fabric.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="fonts.css?v=1">
+<link rel="stylesheet" href="styles.css?v=9">
+</head>
+<body class="revealed">
+
+<main>
+  <section class="page viz">
+    <a class="page-home" href="/">&larr; champ.mk</a>
+    <h1>The three examples</h1>
+    <p class="lede">
+      This is not the simulator. The engine is a Rust CLI that writes tables.
+      What you have here is a reading of three locked examples so you can see
+      why packing free GPUs is not the same as meeting a deadline.
+    </p>
+
+    <div class="viz-tabs" role="tablist">
+      <button type="button" id="tab-A" role="tab" aria-selected="false">A &mdash; the map</button>
+      <button type="button" id="tab-B" role="tab" aria-selected="false">B &mdash; the stopwatch</button>
+      <button type="button" id="tab-C" role="tab" aria-selected="true" class="on">C &mdash; leftover</button>
+    </div>
+
+    <div id="copy-A" class="viz-copy">
+      <h2>Example A</h2>
+      <p>32 servers, eight GPUs each. This is the map. No jobs yet.</p>
+    </div>
+
+    <div id="copy-B" class="viz-copy">
+      <h2>Example B</h2>
+      <p>One ring AllReduce, eight GPUs, 64&nbsp;MiB. A stopwatch. No leftover, no packing.</p>
+    </div>
+
+    <div id="copy-C" class="viz-copy on">
+      <h2>Example C</h2>
+      <p>
+        Two jobs. One rail is already full. Naive takes the first free GPUs
+        and admits both; both miss. Joint puts the first job on the cool rail
+        and refuses the second.
+      </p>
+    </div>
+
+    <nav class="viz-nav" aria-label="Example steps">
+      <span id="c-only">
+        <button type="button" id="naive" class="on">naive</button>
+        <button type="button" id="joint">joint</button>
+      </span>
+      <button type="button" id="prev">prev</button>
+      <button type="button" id="next">next</button>
+      <span id="label" class="viz-label"></span>
+    </nav>
+    <p id="step" class="viz-step"></p>
+
+    <div class="viz-stage">
+      <canvas id="c" width="1000" height="620" aria-label="Stepped diagram of the current example"></canvas>
+    </div>
+
+    <p class="viz-keys">Arrow keys step. 1 / 2 / 3 pick the example.</p>
+
+    <p class="links">
+      <a href="https://github.com/champmk/fabric-te">The engine</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="/">Back</a>
+    </p>
+  </section>
+
+  <footer>
+    <p class="contact">
+      <a href="/">Home</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="log.html">Log</a>
+      <span class="dot" aria-hidden="true">&middot;</span>
+      <a href="https://github.com/champmk/champmukiza.site">Source</a>
+    </p>
+    <p class="colophon desk-line" id="desk-clock" hidden></p>
+    <p class="colophon" id="commit-line" hidden></p>
+    <p class="colophon">CHAMP.MK &middot; Seattle &middot; 2026</p>
+  </footer>
+</main>
+
+<script src="desk.js" defer></script>
+<script src="honest.js" defer></script>
+<script src="fabric.js" defer></script>
+</body>
+</html>
